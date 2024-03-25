@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {formatDate} from '../../helpers/dateFormat'
 const EXPIRATION = 7;
 
+
 const TABLE_HEAD = ['ISBN', 'Reserve date' , 'Due date', 'Pickup date', 'Status']
 // Transaction page
 const Transaction = () => {
@@ -45,7 +46,7 @@ const Transaction = () => {
   }
 
   return (
-    <div className='pt-12 pb-2 pr-4 pl-5'>
+    <div>
       <form className='space-y-6'>
         <h1 className='text-2xl font-semibold'>BORROW BOOK</h1>
         <div className='grid grid-cols-2 gap-5'>

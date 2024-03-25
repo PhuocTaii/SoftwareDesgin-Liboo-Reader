@@ -48,7 +48,7 @@ const Profile = () => {
   }
 
   return (
-<div className="w-full flex gap-8 pt-12 pb-2 pr-4 pl-3">
+    <div className="w-full flex gap-8 pt-12 pb-2 pr-4 pl-3">
       <div className="relative w-32 h-32 shrink-0">
         {!account?.image ? (
           <BiUserCircle className="w-full h-full" />
