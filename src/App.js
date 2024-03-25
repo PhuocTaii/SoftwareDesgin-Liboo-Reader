@@ -25,7 +25,8 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="catalog" element={<Catalog />} />
           <Route path="transaction/:id" element={<Transaction />} />
-          <Route path="my-account" element={<Profile />} />
+          <Route path="transaction" element={<Transaction />} />
+          <Route path="myaccount" element={<Profile />} />
           <Route path="catalog/:id" element={<BookDetail />} />
         </Route>
       </Route>
