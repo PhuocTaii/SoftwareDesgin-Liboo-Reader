@@ -9,6 +9,7 @@ import AuthLayout from './layouts/Auth'
 import HomeLayout from './layouts/Home'
 import Login from './features/auth/Login'
 import SignUp from './features/auth/SignUp'
+import BookDetail from './features/book/Detail'
 
 const App = () => {
   return (
@@ -23,8 +24,9 @@ const App = () => {
         </Route>
         <Route element={<MainLayout />}>
           <Route path="catalog" element={<Catalog />} />
-          <Route path="transaction" element={<Transaction />} />
+          <Route path="transaction/:id" element={<Transaction />} />
           <Route path="my-account" element={<Profile />} />
+          <Route path="catalog/:id" element={<BookDetail />} />
         </Route>
       </Route>
     </Routes>

@@ -25,7 +25,7 @@ const Catalog = () => {
       <h1 className='text-2xl font-semibold'>CATALOG</h1>
       <div className='grid grid-cols-6 gap-x-10 gap-y-4 max-w-fit'>
         {data?.map((item) => (
-          <Link key={item._id} to={`/Catalog/${item.ISBN}`}>
+          <Link key={item._id} to={`/catalog/${item.ISBN}`}>
             <div className='flex flex-col items-center gap-2'>
               <div className='relative'>
                 <img src={item.image} alt='book' className='peer h-60 object-cover' />
