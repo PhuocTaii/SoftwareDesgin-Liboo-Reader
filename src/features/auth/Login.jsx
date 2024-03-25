@@ -18,8 +18,15 @@ const Login = () => {
     setAccount({...account, [name]: value});
   }
 
+  const handleSignin = (e) => {
+    e.preventDefault();
+    // loginUser(account, dispatch, navigate);
+  }
+
   return (
-<form className="flex flex-col items-center gap-8 w-full">
+    <form className="flex flex-col items-center gap-8 w-full"
+      onSubmit={(e) => handleSignin(e)}
+    >
       <div className="w-full flex flex-col gap-3">
         <Input 
           icon={<FaRegUser />} 

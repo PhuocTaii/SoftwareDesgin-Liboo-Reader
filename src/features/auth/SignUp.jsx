@@ -3,19 +3,26 @@ import { Input } from "@material-tailwind/react";
 // import { FaInfoCircle } from "react-icons/fa";
 import RadioButton from "../../components/RadioButton";
 import CustomButton from "../../components/CustomButton";
+import { useDispatch } from "react-redux";
 
 const SignUp = () => {
   const [account, setAccount] = useState({email: '', password: '', name: '', id: '', birthday: '', gender: 'Male', address: ''});
-
+  const dispatch = useDispatch();
   const handleChangeInfo = (e) => {
     e.preventDefault();
     const {name, value} = e.target;
     setAccount({...account, [name]: value});
   }
 
+  const handleSignup = (e) => {
+    e.preventDefault();
+    // registerUser(account, dispatch);
+  }
+
   return (
     <form
       className="flex flex-col items-center gap-8 w-full"
+      onSubmit={(e) => handleSignup(e)}
     >
       <div className="w-full grid grid-cols-2 gap-3">
         <Input
