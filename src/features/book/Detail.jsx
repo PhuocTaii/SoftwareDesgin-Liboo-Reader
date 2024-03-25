@@ -4,6 +4,7 @@ import CustomButton from '../../components/CustomButton'
 import {BiChevronUp, BiChevronDown} from 'react-icons/bi'
 import { useNavigate } from "react-router-dom";
 
+
 // Book detail page
 const Detail = () => {
     const [expanded, setExpanded] = useState(false);
