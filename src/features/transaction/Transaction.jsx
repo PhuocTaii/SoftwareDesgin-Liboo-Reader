@@ -45,7 +45,6 @@ const Transaction = () => {
   }
 
   return (
-    <div>
     <div className=''>
       <form className='space-y-6'>
         <h1 className='text-2xl font-semibold'>BORROW BOOK</h1>
