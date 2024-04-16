@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {formatDate} from '../../helpers/dateFormat'
 const EXPIRATION = 7;
 
-const TABLE_HEAD = ['ISBN', 'Reserve date' , 'Due date', 'Pickup date', 'Status']
+const TABLE_HEAD = ['ISBN', 'Reserve date' , 'Pickup date', 'Status']
 // Transaction page
 const Transaction = () => {
 
@@ -14,7 +14,7 @@ const Transaction = () => {
   const [expanded, setExpanded] = useState(false);
   const today = new Date();
   const dummyUser = {
-    username: 'phuoctai17',
+    username: 'phuoctai17@gmail.com',
     // image: dummyImage,
     // ISBN: '1234567890',
     // author: 'John Doe',
@@ -30,10 +30,10 @@ const Transaction = () => {
   const navigate = useNavigate();
   // Dummy data for the table
   const [borrowBooks, setBorrowBooks] = useState([
-    { isbn: '1234567890', reserveDate: '2024-03-25', dueDate: '2024-04-10', pickupDate: '2024-03-27', status: 'Pending' },
-    { isbn: '1234567891', reserveDate: '2024-03-26', dueDate: '2024-04-11', pickupDate: '2024-03-28', status: 'Pending' },
-    { isbn: '1234567892', reserveDate: '2024-03-26', dueDate: '2024-04-11', pickupDate: '2024-03-28', status: 'Pending' },
-    { isbn: '1234567893', reserveDate: '2024-03-26', dueDate: '2024-04-11', pickupDate: '2024-03-28', status: 'Pending' },
+    { isbn: '1234567890', reserveDate: '2024-03-25', pickupDate: '2024-03-27', status: 'Pending' },
+    { isbn: '1234567891', reserveDate: '2024-03-26', pickupDate: '2024-03-28', status: 'Pending' },
+    { isbn: '1234567892', reserveDate: '2024-03-26', pickupDate: '2024-03-28', status: 'Pending' },
+    { isbn: '1234567893', reserveDate: '2024-03-26', pickupDate: '2024-03-28', status: 'Pending' },
     // Add more dummy data as needed
   ]);
 
@@ -45,13 +45,13 @@ const Transaction = () => {
   }
 
   return (
-    <div className='pt-12 pb-2 pr-4 pl-5'>
+    <div className=''>
       <form className='space-y-6'>
         <h1 className='text-2xl font-semibold'>BORROW BOOK</h1>
         <div className='grid grid-cols-2 gap-5'>
           <Input
             variant="standard"
-            label="Username"
+            label="Email"
             value={slip.username}
             readOnly
           />
@@ -106,14 +106,11 @@ const Transaction = () => {
                   <p>{formatDate(record.reserveDate)}</p>
                 </td>
                 <td className="p-2">
-                  <p>{formatDate(record.dueDate)}</p>
-                </td>   
-                <td className="p-2">
                   <p>{formatDate(record.pickupDate)}</p>
                 </td>  
                 <td className="p-2">
                   <p>{record.status}</p>
-                </td>          
+                </td>
               </tr>
             ))}
           </tbody>
