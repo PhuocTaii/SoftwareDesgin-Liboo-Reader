@@ -30,11 +30,6 @@ const items = [
     text: 'My account',
     path: '/myaccount',
   },
-  {
-    icon: <GoArrowRight color="white" size="1.5rem" />,
-    text: 'Booking history',
-    path: '/bookhistory',
-  }
 ]
 
 const MenuItem = ({ icon, text, active, onClick }) => {
