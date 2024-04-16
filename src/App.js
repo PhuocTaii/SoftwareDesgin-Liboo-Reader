@@ -10,7 +10,8 @@ import HomeLayout from './layouts/Home'
 import Login from './features/auth/Login'
 import SignUp from './features/auth/SignUp'
 import BookDetail from './features/book/Detail'
-import History from './features/history/History'
+import History from './features/transaction/History'
+import Membership from './features/membership/Membership'
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="transaction" element={<Transaction />} />
           <Route path="history" element={<History />} />
           <Route path="myaccount" element={<Profile />} />
+          <Route path="membership" element={<Membership />} />
           <Route path="catalog/:id" element={<BookDetail />} />
         </Route>
       </Route>
