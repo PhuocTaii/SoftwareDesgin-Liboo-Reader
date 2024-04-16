@@ -15,7 +15,7 @@ const Header = () => {
 
   return (
     <div
-      className={`h-14 w-full ${toggle ? '!w-[calc(100%-12.875rem)]' : ''} fixed top-0 flex justify-between items-center px-9 bg-white`}>
+      className={`h-14 w-full ${toggle ? '!w-[calc(100%-12.875rem)]' : ''} fixed top-0 flex justify-between items-center px-9 bg-white z-50`}>
       <motion.button
         className=""
         onClick={(e) => handleToggleMenu(e)}

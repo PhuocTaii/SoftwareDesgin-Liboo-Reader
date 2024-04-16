@@ -1,7 +1,7 @@
 // Menu sidebar component
 import logo from '../assets/logo.png'
 import { Link, useLocation } from 'react-router-dom'
-import { GoBook, GoArrowRight, GoPerson } from 'react-icons/go'
+import { GoBook, GoArrowRight, GoPerson, GoHistory } from 'react-icons/go'
 import { BiLogOut, BiX } from 'react-icons/bi'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle, setSelectedItem } from '../slices/menu'
@@ -19,6 +19,11 @@ const items = [
     icon: <GoArrowRight color="white" size="1.5rem" />,
     text: 'Borrow/Renew',
     path: '/transaction',
+  },
+  {
+    icon: <GoHistory color="white" size="1.5rem" />,
+    text: 'History',
+    path: '/history',
   },
   {
     icon: <GoPerson color="white" size="1.5rem" />,
