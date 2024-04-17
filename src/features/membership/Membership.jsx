@@ -62,9 +62,9 @@ const Membership = () => {
                   {membership.type}
                 </Typography>
                 <List className="w-full">
-                  <ListItem className=""><p>Max books allowed to borrow per time: <span className="font-semibold">{membership.maxBooksAllowed}</span></p></ListItem>
-                  <ListItem className=""><p>Max renewals allowed per time: <span className="font-semibold">{membership.maxRenewalsAllowed}</span></p></ListItem>
-                  <ListItem className=""><p>Max reservations allowed per time: <span className="font-semibold">{membership.reservedBooksAllowed}</span></p></ListItem>
+                  <ListItem className=""><p>Max number of books borrowed at a time: <span className="font-semibold">{membership.maxBooksAllowed}</span></p></ListItem>
+                  <ListItem className=""><p>Max number of times to renew a book: <span className="font-semibold">{membership.maxRenewalsAllowed}</span></p></ListItem>
+                  <ListItem className=""><p>Max number of books reserved at a time: <span className="font-semibold">{membership.reservedBooksAllowed}</span></p></ListItem>
                 </List>
               </CardBody>
               <CardFooter className="pt-0 w-full flex justify-center">
