@@ -23,7 +23,7 @@ const items = [
   {
     icon: <GoPerson color="white" size="1.5rem" />,
     text: 'My account',
-    path: '/my-account',
+    path: '/myaccount',
   },
 ]
 

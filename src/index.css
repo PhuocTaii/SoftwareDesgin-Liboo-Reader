@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --my-red: theme(colors.red);
+    --my-orange: theme(colors.orange);
+    --my-text-primary: theme(colors.textPrimary);
+  }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -9,6 +17,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --tw-text-opacity: 1;
+  color: var(--my-text-primary);
+  font-size: 14px;
 }
 
 code {

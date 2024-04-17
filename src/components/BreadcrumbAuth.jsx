@@ -24,7 +24,7 @@ const BreadcrumbAuth = () => {
         className="hover:text-red"
         onClick={() => dispatch(setSelectedActionAuth(1))}>
         <a
-          href="/sign-up"
+          href="/signup"
           className={`text-base opacity-60 ${selectedActionAuth === 1 && 'text-red'}`}>
           Sign Up
         </a>
