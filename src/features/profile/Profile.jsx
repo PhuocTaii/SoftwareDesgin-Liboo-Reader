@@ -48,7 +48,7 @@ const Profile = () => {
   }
 
   return (
-<div className="w-full flex gap-8 pt-12 pb-2 pr-4 pl-3">
+    <div className="w-full flex gap-8">
       <div className="relative w-32 h-32 shrink-0">
         {!account?.image ? (
           <BiUserCircle className="w-full h-full" />
@@ -69,23 +69,16 @@ const Profile = () => {
       <form className='w-full space-y-6' onSubmit={handleUpdateProfile}>
         <h1 className='text-2xl font-semibold text-center'>PROFILE</h1>
         <div className='w-full grid grid-cols-2 gap-4'>
-        <div className='col-span-2'>
-            <Input
-              variant="standard"
-              label="Username"
-              required
-              minLength={6}
-              maxLength={20}
-              name="username"
-              value={account.username}
-              onChange={handleChangeInfo}
-              readOnly
-            />
-            <p className="mt-2 flex items-center gap-2 font-normal text-[0.75rem]">
-              <FaInfoCircle className='w-3.5 h-3.5' />
-              Use 6-20 characters.
-            </p>
-          </div>
+          <Input
+            variant="standard"
+            label="Email"
+            required
+            type="email"
+            onChange={handleChangeInfo}
+            value={account.email}
+            name="email"
+            readOnly
+          />
           <Input
             variant="standard"
             label="Name"
@@ -134,15 +127,6 @@ const Profile = () => {
               checked={account.sex === "Female"}
             />
           </div>
-          <Input
-            variant="standard"
-            label="Email"
-            required
-            type="email"
-            onChange={handleChangeInfo}
-            value={account.email}
-            name="email"
-          />
           <Input
             variant="standard"
             label="Address"

@@ -1,7 +1,8 @@
 // Menu sidebar component
 import logo from '../assets/logo.png'
 import { Link, useLocation } from 'react-router-dom'
-import { GoBook, GoArrowRight, GoPerson } from 'react-icons/go'
+import { GoBook, GoArrowRight, GoPerson, GoHistory } from 'react-icons/go'
+import { MdCardMembership } from "react-icons/md";
 import { BiLogOut, BiX } from 'react-icons/bi'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle, setSelectedItem } from '../slices/menu'
@@ -21,9 +22,19 @@ const items = [
     path: '/transaction',
   },
   {
+    icon: <GoHistory color="white" size="1.5rem" />,
+    text: 'History',
+    path: '/history',
+  },
+  {
     icon: <GoPerson color="white" size="1.5rem" />,
     text: 'My account',
     path: '/myaccount',
+  },
+  {
+    icon: <MdCardMembership color="white" size="1.5rem" />,
+    text: 'Membership',
+    path: '/membership',
   },
 ]
 
