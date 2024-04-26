@@ -69,23 +69,6 @@ const Profile = () => {
       <form className='w-full space-y-6' onSubmit={handleUpdateProfile}>
         <h1 className='text-2xl font-semibold text-center'>PROFILE</h1>
         <div className='w-full grid grid-cols-2 gap-4'>
-        <div className='col-span-2'>
-            <Input
-              variant="standard"
-              label="Username"
-              required
-              minLength={6}
-              maxLength={20}
-              name="username"
-              value={account.username}
-              onChange={handleChangeInfo}
-              readOnly
-            />
-            <p className="mt-2 flex items-center gap-2 font-normal text-[0.75rem]">
-              <FaInfoCircle className='w-3.5 h-3.5' />
-              Use 6-20 characters.
-            </p>
-          </div>
           <Input
             variant="standard"
             label="Name"

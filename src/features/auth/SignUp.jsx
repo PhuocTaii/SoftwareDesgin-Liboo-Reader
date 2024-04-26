@@ -4,10 +4,13 @@ import { Input } from "@material-tailwind/react";
 import RadioButton from "../../components/RadioButton";
 import CustomButton from "../../components/CustomButton";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { register } from "./authApi";
 
 const SignUp = () => {
-  const [account, setAccount] = useState({email: '', password: '', name: '', id: '', birthday: '', gender: 'Male', address: ''});
+  const [account, setAccount] = useState({email: '', password: '', name: '', identifier: '', birthday: '', gender: true, address: '', phone: ''});
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleChangeInfo = (e) => {
     e.preventDefault();
     const {name, value} = e.target;
@@ -16,7 +19,7 @@ const SignUp = () => {
 
   const handleSignup = (e) => {
     e.preventDefault();
-    // registerUser(account, dispatch);
+    register(account, dispatch, navigate)
   }
 
   return (
@@ -54,8 +57,8 @@ const SignUp = () => {
           onChange={handleChangeInfo}
           onInput={(e) => e.target.value = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')}
           pattern=".{12}"
-          name='id' 
-          value={account.id}
+          name='identifier' 
+          value={account.identifier}
         />
         <Input
           label="Birthdate"
@@ -72,19 +75,26 @@ const SignUp = () => {
           name='address' 
           value={account.address}
         />
+        <Input
+          label="Phone"
+          required
+          onChange={handleChangeInfo}
+          name='phone' 
+          value={account.phone}
+        />
         <div className="flex gap-4"> {/* TODO: Update UI whenever change gender*/}
           <RadioButton 
             label="Male" 
             value='Male'
             name='gender' 
-            checked={account.gender === 'Male'}
+            checked={account.gender === true}
             onChange={handleChangeInfo}
           />
           <RadioButton 
             label="Female"
             value='Female'
             name='gender' 
-            checked={account.gender === 'Female'} 
+            checked={account.gender === false} 
             onChange={handleChangeInfo}
           />
         </div>
