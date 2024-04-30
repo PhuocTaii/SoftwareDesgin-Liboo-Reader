@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals'
 import { ThemeProvider } from '@material-tailwind/react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
+import { ToastContainer } from 'react-toastify';
+import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './store'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
@@ -13,10 +15,16 @@ root.render(
   <React.StrictMode>
     <Router>
       <Provider store={store}>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
+          </PersistGate>
       </Provider>
+      <ToastContainer
+        autoClose={1000}
+        hideProgressBar={true}
+      />
     </Router>
   </React.StrictMode>
 )

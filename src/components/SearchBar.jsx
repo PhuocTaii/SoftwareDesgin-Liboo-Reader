@@ -10,7 +10,7 @@ import {
 } from '@material-tailwind/react'
 import { Link } from 'react-router-dom'
 
-const SearchBar = ({ data }) => {
+const SearchBar = ({ data, className }) => {
   const filters = ['ISBN', 'name']
 
   const [selectedFilter, setSelectedFilter] = useState(filters[0])
@@ -29,7 +29,7 @@ const SearchBar = ({ data }) => {
   // }
 
   return (
-    <div className="flex w-full sm:w-[23rem]">
+    <div className={`flex w-full sm:w-[23rem] ${className}`}>
       <Menu placement="bottom-start" open={openMenu} handler={setOpenMenu}>
         <MenuHandler>
           <Button

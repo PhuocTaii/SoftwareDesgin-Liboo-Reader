@@ -4,11 +4,13 @@ import CustomButton from "../../components/CustomButton";
 import { FaRegUser, FaLock } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { login } from "./authApi";
+
 
 // Login form component
 const Login = () => {
 
-  const [account, setAccount] = useState({username: '', password: ''});
+  const [account, setAccount] = useState({email: '', password: ''});
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ const Login = () => {
 
   const handleSignin = (e) => {
     e.preventDefault();
-    // loginUser(account, dispatch, navigate);
+    login(account, dispatch, navigate);
   }
 
   return (
@@ -30,11 +32,11 @@ const Login = () => {
       <div className="w-full flex flex-col gap-3">
         <Input 
           icon={<FaRegUser />} 
-          label="Username"
+          label="Email"
           onChange={handleChangeInfo}
           required
-          name="username"
-          value={account.username}
+          name="email"
+          value={account.email}
         />
         <Input 
           icon={<FaLock />} 

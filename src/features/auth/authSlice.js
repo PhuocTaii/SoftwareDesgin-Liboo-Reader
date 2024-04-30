@@ -4,14 +4,19 @@ const initialState = {
     currentAction: "Sign in",
     signin: {
         currentUser: null,
-        isFethching: false,
+        isFetching: false,
         error: false
     },
 
     register: {
         currentUser: null,
-        isFethching: false,
+        isFetching: false,
         error: false
+    },
+
+    logout:{
+        isFetching: false,
+        error: false,
     }
 }
 
@@ -25,35 +30,51 @@ const authSlice = createSlice({
 
         //Sign in
         signInBegin: (state) => {
-            state.signin.isFethching = true
+            state.signin.isFetching = true
         },
 
         signInSuccess: (state, action) => {
-            state.signin.isFethching = false
+            state.signin.isFetching = false
             state.signin.currentUser = action.payload
             state.signin.error = false
         },
 
         signInFailure: (state) => {
-            state.signin.isFethching = false
+            state.signin.isFetching = false
             state.signin.error = true
         },
 
         //Register
         registerBegin: (state) => {
-            state.register.isFethching = true
+            state.register.isFetching = true
         },
         
         registerSuccess: (state, action) => {
-            state.register.isFethching = false
+            state.register.isFetching = false
             state.register.currentUser = action.payload
             state.register.error = false
         },
 
         registerFailure: (state) => {
-            state.register.isFethching = false
+            state.register.isFetching = false
             state.register.error = true
-        }
+        },
+
+        //Logout
+        logoutBegin: (state) => {
+            state.logout.isFetching = true
+        },
+
+        logoutSuccess: (state) => {
+            state.signin.isFetching = false
+            state.signin.currentUser = null
+            state.signin.error = false
+        },
+
+        logoutFailure: (state) => {
+            state.logout.isFetching = false
+            state.logout.error = true
+        },
     }
 })
 

@@ -1,12 +1,13 @@
 // Menu sidebar component
 import logo from '../assets/logo.png'
 import { Link, useLocation } from 'react-router-dom'
-import { GoBook, GoArrowRight, GoPerson } from 'react-icons/go'
+import { GoBook, GoArrowRight, GoPerson, GoHistory } from 'react-icons/go'
+import { MdCardMembership } from "react-icons/md";
 import { BiLogOut, BiX } from 'react-icons/bi'
 import { useDispatch, useSelector } from 'react-redux'
 import { setToggle, setSelectedItem } from '../slices/menu'
 import { motion } from 'framer-motion'
-// import {logoutUser} from "../slices/requestApi"
+import {logout} from "../features/auth/authApi"
 import { FaFacebookSquare, FaInstagram } from 'react-icons/fa'
 
 const items = [
@@ -21,15 +22,20 @@ const items = [
     path: '/transaction',
   },
   {
+    icon: <GoHistory color="white" size="1.5rem" />,
+    text: 'History',
+    path: '/history',
+  },
+  {
     icon: <GoPerson color="white" size="1.5rem" />,
     text: 'My account',
     path: '/myaccount',
   },
   {
-    icon: <GoArrowRight color="white" size="1.5rem" />,
-    text: 'Booking history',
-    path: '/bookhistory',
-  }
+    icon: <MdCardMembership color="white" size="1.5rem" />,
+    text: 'Membership',
+    path: '/membership',
+  },
 ]
 
 const MenuItem = ({ icon, text, active, onClick }) => {
@@ -46,7 +52,7 @@ const MenuItem = ({ icon, text, active, onClick }) => {
 const MenuSidebar = () => {
   // const location = useLocation();
   const { toggle, selectedItem } = useSelector((state) => state.menu)
-  // const user = useSelector((state) => state.auth.login?.currentUser);
+  const token = useSelector((state) => state.auth.signin?.currentUser.refresh_token);
 
   const dispatch = useDispatch()
 
@@ -55,10 +61,9 @@ const MenuSidebar = () => {
     dispatch(setToggle())
   }
 
-  const logout = () => {
-    // console.log(user);
-    // logoutUser(dispatch, user?._id, user?.accessToken);
-    // dispatch(setToggle());
+  const logoutHandle = () => {
+    logout(dispatch, token);
+    dispatch(setToggle());
   }
 
   return (
@@ -101,7 +106,7 @@ const MenuSidebar = () => {
 
             <div className="w-full pl-8 text-base space-y-3">
               <hr className="mr-4" />
-              <button onClick={logout} className="flex gap-2">
+              <button onClick={logoutHandle} className="flex gap-2">
                 <BiLogOut color="white" size="1.5rem" />
                 <span className="text-white">Logout</span>
               </button>
