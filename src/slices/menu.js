@@ -5,7 +5,6 @@ const menuSlice = createSlice({
   initialState: {
     toggle: false,
     selectedItem: -1,
-    selectedActionAuth: 0,
   },
   reducers: {
     setToggle(state, action) {
@@ -13,9 +12,6 @@ const menuSlice = createSlice({
     },
     setSelectedItem(state, action) {
       state.selectedItem = action.payload
-    },
-    setSelectedActionAuth(state, action) {
-      state.selectedActionAuth = action.payload
     },
   },
 })
