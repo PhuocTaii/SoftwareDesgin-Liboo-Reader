@@ -10,14 +10,8 @@ export const register = async (user, dispatch, navigate) => {
     dispatch(slice.registerBegin())
     try{
         const res = await axios.post(`${url + 'signup'}`, {
-            email: user.email,
-            password: user.password,
-            name: user.name,
-            identifier: user.identifier,
+            ...user,
             birthDate: user.birthday,
-            address: user.address,
-            gender: user.gender,
-            phone: user.phone
         }, {
             'Content-Type': 'application/json'
         })
@@ -35,10 +29,7 @@ export const login = async (user, dispatch, navigate) => {
     dispatch(slice.signInBegin())
     try{
         console.log(user)
-        const res = await axios.post(`${url + 'login'}`, {
-            email: user.email,
-            password: user.password
-        }, {
+        const res = await axios.post(`${url + 'login'}`, user, {
             'Content-Type': 'application/json'
         })
         dispatch(slice.signInSuccess(res.data))

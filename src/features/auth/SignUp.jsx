@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import { Input } from "@material-tailwind/react";
-// import { FaInfoCircle } from "react-icons/fa";
+import { Input, Typography } from "@material-tailwind/react";
+import { FaInfoCircle } from "react-icons/fa";
 import RadioButton from "../../components/RadioButton";
 import CustomButton from "../../components/CustomButton";
 import { useDispatch } from "react-redux";
@@ -9,21 +9,32 @@ import { register } from "./authApi";
 
 const SignUp = () => {
   const [account, setAccount] = useState({email: '', password: '', name: '', identifier: '', birthday: '', gender: true, address: '', phone: ''});
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const handleChangeInfo = (e) => {
     e.preventDefault();
     const {name, value} = e.target;
-    setAccount({...account, [name]: value});
+    if(name !== 'gender') {
+      setAccount(prevAccount => 
+        ({
+          ...prevAccount, 
+          [name]: value
+        }));
+    }
   }
 
   const handleSignup = (e) => {
     e.preventDefault();
+    account.gender = document.getElementById("form-sign-up")['gender'].value === 'male'
+    console.log(account)
     register(account, dispatch, navigate)
   }
 
   return (
     <form
+      id="form-sign-up"
       className="flex flex-col items-center gap-8 w-full"
       onSubmit={(e) => handleSignup(e)}
     >
@@ -57,7 +68,7 @@ const SignUp = () => {
           onChange={handleChangeInfo}
           onInput={(e) => e.target.value = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')}
           pattern=".{12}"
-          name='identifier' 
+          name='identifier'
           value={account.identifier}
         />
         <Input
@@ -82,20 +93,17 @@ const SignUp = () => {
           name='phone' 
           value={account.phone}
         />
-        <div className="flex gap-4"> {/* TODO: Update UI whenever change gender*/}
+        <div className="flex gap-4">
           <RadioButton 
             label="Male" 
-            value='Male'
-            name='gender' 
-            checked={account.gender === true}
-            onChange={handleChangeInfo}
+            value={true}
+            name='gender'
+            defaultChecked={true}
           />
           <RadioButton 
             label="Female"
-            value='Female'
-            name='gender' 
-            checked={account.gender === false} 
-            onChange={handleChangeInfo}
+            value={false}
+            name='gender'
           />
         </div>
       </div>
