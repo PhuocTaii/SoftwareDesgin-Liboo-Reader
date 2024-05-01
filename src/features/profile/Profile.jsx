@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { BiUserCircle } from 'react-icons/bi';
 import { MdEdit } from 'react-icons/md';
 import { Input } from "@material-tailwind/react";
@@ -6,22 +6,36 @@ import { FaInfoCircle } from "react-icons/fa";
 import RadioButton from "../../components/RadioButton";
 import CustomButton from "../../components/CustomButton";
 import {formatDate} from '../../helpers/dateFormat'
+import { useSelector, useDispatch } from 'react-redux'
+import { updateProfile, updateImage } from './profileApi'
+
 
 // Profile page
 const Profile = () => {
-  // Dummy account object
+  const curUser = useSelector((state) => state.auth.currentUser);
+  const dispatch = useDispatch();
+
   const [account, setAccount] = useState({
-    image: '', // You can add a placeholder image URL here if needed
-    username: 'example_user',
-    name: 'John Doe',
-    id: '123456789012',
-    birthday: '1990-01-01',
-    sex: 'Male',
-    email: 'example@example.com',
-    address: '123 Street, City, Country',
-    makingDay: new Date(),
-    invalidDay: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+    id: curUser.user.id,
+    image: curUser.user.image,
+    name: curUser.user.name,
+    identifier: curUser.user.identifier,
+    birthday: curUser.user.birthDate,
+    gender: curUser.user.gender,
+    email: curUser.user.email,
+    address: curUser.user.address,
+    makingDay: curUser.user.joinedDate,
+    invalidDay: curUser.user.expiredDate,
+    phone: curUser.user.phone,
   });
+
+  useEffect(() => {
+    setAccount({
+      ...account,
+      image: curUser.user.image,
+    })
+  }, [curUser.user.image])
+
 
   const handleChangeInfo = (e) => {
     e.preventDefault();
@@ -31,32 +45,28 @@ const Profile = () => {
 
   const changePhoto = (e) => {
     e.preventDefault();
-    var reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = () => {
-      setAccount({...account, image: reader?.result});
-      // updateInfo(dispatch, account._id, user?.accessToken , {...account, image: reader?.result});
-    }
-    reader.onerror = (error) => {
-      console.log('Error: ', error);
-    };
+    console.log(e.target.files[0].name)
+    var formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    updateImage(dispatch, account?.id, curUser?.refresh_token, formData);
   }
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
-    // updateInfo(dispatch, account?._id, account?.accessToken, account);
+    account.gender = document.getElementById("update-profile")['gender'].value === 'male'
+    updateProfile(dispatch, account?.id, curUser.refresh_token, account);
   }
 
   return (
     <div className="w-full flex gap-8">
       <div className="relative w-32 h-32 shrink-0">
         {!account?.image ? (
-          <BiUserCircle className="w-full h-full" />
+          <BiUserCircle className="w-full h-full " />
         ) : (
           <img
-            src={account?.image}
+            src={account?.image.secureUrl}
             alt="upload"
-            className="object-cover w-full h-full rounded-full"
+            className="object-cover w-full h-full rounded-full border"
           />
         )}
         <div
@@ -66,7 +76,7 @@ const Profile = () => {
           <MdEdit className="text-white text-center hover:cursor-pointer w-full h-full" onClick={() => document.querySelector('input[type="file"]').click()} />
         </div>
       </div>
-      <form className='w-full space-y-6' onSubmit={handleUpdateProfile}>
+      <form id="update-profile" className='w-full space-y-6' onSubmit={handleUpdateProfile}>
         <h1 className='text-2xl font-semibold text-center'>PROFILE</h1>
         <div className='w-full grid grid-cols-2 gap-4'>
           <Input
@@ -99,8 +109,8 @@ const Profile = () => {
             pattern=".{12}"
             maxLength={12}
             onChange={handleChangeInfo}
-            name="id"
-            value={account.id}
+            name="identifer"
+            value={account.identifier}
           />
           <Input
             variant="standard"
@@ -111,22 +121,14 @@ const Profile = () => {
             name="birthday"
             value={account.birthday === '' ? '' : new Date(account.birthday).toISOString().slice(0, 10)}
           />
-          <div className="flex gap-4 self-end"> 
-            <RadioButton
-              label="Male"
-              onChange={handleChangeInfo}
-              value="Male"
-              name="sex"
-              checked={account.sex === "Male"}
-            />
-            <RadioButton
-              label="Female"
-              onChange={handleChangeInfo}
-              value="Female"
-              name="sex"
-              checked={account.sex === "Female"}
-            />
-          </div>
+          <Input
+            variant="standard"
+            label="Phone number"
+            required
+            onChange={handleChangeInfo}
+            value={account.phone}
+            name="phone"
+          />
           <Input
             variant="standard"
             label="Address"
@@ -147,10 +149,23 @@ const Profile = () => {
             variant="standard"
             label="Expiration date"
             readOnly
-            value={formatDate(account.invalidDay)}
+            value={account.invalidDay ? formatDate(account.invalidDay) : ''}
             name="invalidDay"
             labelProps={{ className: "peer-disabled:text-textDisable" }}
           />
+          <div className="flex gap-4">
+            <RadioButton 
+              label="Male" 
+              value={true}
+              name='gender'
+              defaultChecked={true}
+            />
+            <RadioButton 
+              label="Female"
+              value={false}
+              name='gender'
+            />
+          </div>
         </div>
         <div className="flex justify-center pt-3">
           <CustomButton label="Save changes" type="submit" />

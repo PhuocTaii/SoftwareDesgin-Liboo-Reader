@@ -29,7 +29,7 @@ export const login = async (user, dispatch, navigate) => {
     dispatch(slice.signInBegin())
     try{
         console.log(user)
-        const res = await axios.post(`${url + 'login'}`, user, {
+        const res = await axios.post(`${url + 'user/login'}`, user, {
             'Content-Type': 'application/json'
         })
         dispatch(slice.signInSuccess(res.data))
