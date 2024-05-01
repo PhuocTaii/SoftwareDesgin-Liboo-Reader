@@ -12,6 +12,7 @@ import SignUp from './features/auth/SignUp'
 import BookDetail from './features/book/Detail'
 import History from './features/transaction/History'
 import Membership from './features/membership/Membership'
+import Rule from './features/rule/Rule'
 import PrivateRoute from './routes/PrivateRoute';
 
 
@@ -35,6 +36,7 @@ const App = () => {
             <Route path="myaccount" element={<Profile />} />
             <Route path="membership" element={<Membership />} />
             <Route path="catalog/:id" element={<BookDetail />} />
+            <Route path="rules" element={<Rule />} />
           </Route>
         </Route>
       </Route>
