@@ -2,14 +2,14 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     currentAction: "Sign in",
+    currentUser: null,
+
     signin: {
-        currentUser: null,
         isFetching: false,
         error: false
     },
 
     register: {
-        currentUser: null,
         isFetching: false,
         error: false
     },
@@ -35,7 +35,7 @@ const authSlice = createSlice({
 
         signInSuccess: (state, action) => {
             state.signin.isFetching = false
-            state.signin.currentUser = action.payload
+            state.currentUser = action.payload
             state.signin.error = false
         },
 
@@ -51,7 +51,7 @@ const authSlice = createSlice({
         
         registerSuccess: (state, action) => {
             state.register.isFetching = false
-            state.register.currentUser = action.payload
+            state.currentUser = action.payload
             state.register.error = false
         },
 
@@ -67,7 +67,7 @@ const authSlice = createSlice({
 
         logoutSuccess: (state) => {
             state.signin.isFetching = false
-            state.signin.currentUser = null
+            state.currentUser = null
             state.signin.error = false
         },
 
