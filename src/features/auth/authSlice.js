@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    currentAction: "Sign in",
     currentUser: null,
 
     signin: {
@@ -24,10 +23,6 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setCurrentAction: (state, action) => {
-            state.currentAction = action.payload
-        },
-
         //Sign in
         signInBegin: (state) => {
             state.signin.isFetching = true

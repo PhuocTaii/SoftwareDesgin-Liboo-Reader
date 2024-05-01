@@ -22,7 +22,7 @@ export const register = async (user, dispatch, navigate) => {
         console.log(err.response);
         dispatch(slice.registerFailure());
         toast.error('Login failed!');
-    }
+    }   
 }
 
 export const login = async (user, dispatch, navigate) => {
