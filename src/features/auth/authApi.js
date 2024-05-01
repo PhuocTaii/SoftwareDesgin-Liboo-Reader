@@ -39,7 +39,9 @@ export const login = async (user, dispatch, navigate) => {
             email: user.email,
             password: user.password
         }, {
-            'Content-Type': 'application/json'
+            headers:{
+                'Content-Type': 'application/json'
+            }
         })
         dispatch(slice.signInSuccess(res.data))
         toast.success('Login successfully!');
