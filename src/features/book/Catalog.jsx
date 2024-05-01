@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import dummyImage from '../../assets/book.png';
 import Pagination from '../../components/Pagination'
+import SearchBar from '../../components/SearchBar'
+
 
 // Catalog page
 const Catalog = () => {
@@ -22,6 +24,7 @@ const Catalog = () => {
 
   return (
     <div className='flex flex-col w-full items-center gap-6'>
+      <SearchBar className="place-self-end"/>
       <h1 className='text-2xl font-semibold'>CATALOG</h1>
       <div className='grid grid-cols-6 gap-x-10 gap-y-4 max-w-fit'>
         {data?.map((item) => (

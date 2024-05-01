@@ -2,7 +2,6 @@ import { motion } from 'framer-motion'
 import { setToggle } from '../slices/menu'
 import { useDispatch, useSelector } from 'react-redux'
 import { BiMenu } from 'react-icons/bi'
-import SearchBar from './SearchBar'
 
 const Header = () => {
   const { toggle } = useSelector((state) => state.menu)
@@ -23,7 +22,6 @@ const Header = () => {
         whileTap={{ rotate: 360, transition: { duration: 0.5 } }}>
         {!toggle && <BiMenu size="2rem" color="black" />}
       </motion.button>
-      <SearchBar className="" />
     </div>
   )
 }
