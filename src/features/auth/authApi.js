@@ -21,7 +21,7 @@ export const register = async (user, dispatch, navigate) => {
     } catch (err){
         console.log(err.response);
         dispatch(slice.registerFailure());
-        toast.error('Login failed!');
+        toast.error(err.response.data);
     }
 }
 
@@ -36,9 +36,8 @@ export const login = async (user, dispatch, navigate) => {
         toast.success('Login successfully!');
         navigate('/');
     } catch(err){
-        console.log(err.response);
         dispatch(slice.signInFailure());
-        toast.error('Login failed!');
+        toast.error(err.response.data);
     }
 }
 
@@ -54,6 +53,6 @@ export const logout = async (dispatch, token) => {
         toast.success('Logout successfully!');
     } catch(err){
         dispatch(slice.logoutFailure());
-        toast.error(err.response);
+        toast.error(err.response.data);
     }
 }
