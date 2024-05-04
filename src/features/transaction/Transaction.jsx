@@ -4,7 +4,10 @@ import {Input} from "@material-tailwind/react";
 import CustomButton from '../../components/CustomButton'
 import { useNavigate } from "react-router-dom";
 import {formatDate} from '../../helpers/dateFormat'
-const EXPIRATION = 7;
+import { useDispatch, useSelector } from 'react-redux'
+import SearchBook from '../../components/SearchBook'
+
+const EXPIRATION = 30;
 
 const TABLE_HEAD = ['ISBN', 'Reserve date' , 'Pickup date', 'Status']
 // Transaction page
@@ -13,59 +16,60 @@ const Transaction = () => {
   const { id } = useParams();
   const [expanded, setExpanded] = useState(false);
   const today = new Date();
-  const dummyUser = {
-    username: 'phuoctai17@gmail.com',
-    // image: dummyImage,
-    // ISBN: '1234567890',
-    // author: 'John Doe',
-    // publisher: 'Example Publisher',
-    // publishYear: '2022',
-    // genre: ['Fiction', 'Thriller'],
-    // price: '200000',
-    // description: 'This is a dummy book description. It contains some text to represent the description of a book. This is a dummy book description. It contains some text to represent the description of a book. This is a dummy book description. It contains some text to represent the description of a book. This is a dummy book description. It contains some text to represent the description of a book. This is a dummy book description. It contains some text to represent the description of a book. This is a dummy book description. It contains some text to represent the description of a book. This is a dummy book description. It contains some text to represent the description of a book. This is a dummy book description. It contains some text to represent the description of a book. This is a dummy book description. It contains some text to represent the description of a book.',
-    // borrowed: 5,
-    // quantity: 10
-  };
-  const [slip, setSlip] = useState({username: dummyUser.username, isbn: id ? id : '', borrowDate: today.toISOString().split('T')[0], dueDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() + EXPIRATION).toISOString().split('T')[0]})
+
+  const curUser = useSelector((state) => state.auth.currentUser.user);
+
+  const [reservation, setReservation] = useState({
+    user: curUser.id, 
+    isbn: [id ? id : ''],
+    pickupDate: today.toISOString().split('T')[0],
+    dueDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() + EXPIRATION).toISOString().split('T')[0]
+  })
+
   const navigate = useNavigate();
-  // Dummy data for the table
-  const [borrowBooks, setBorrowBooks] = useState([
-    { isbn: '1234567890', reserveDate: '2024-03-25', pickupDate: '2024-03-27', status: 'Pending' },
-    { isbn: '1234567891', reserveDate: '2024-03-26', pickupDate: '2024-03-28', status: 'Pending' },
-    { isbn: '1234567892', reserveDate: '2024-03-26', pickupDate: '2024-03-28', status: 'Pending' },
-    { isbn: '1234567893', reserveDate: '2024-03-26', pickupDate: '2024-03-28', status: 'Pending' },
-    // Add more dummy data as needed
-  ]);
+
 
   const handleChangeInfo = (e) => {
     e.preventDefault();
     const {name, value} = e.target;
     const chosenDate = new Date(value);
-    setSlip({...slip, borrowDate: value, dueDate: new Date(chosenDate.getFullYear(), chosenDate.getMonth(), chosenDate.getDate() + EXPIRATION).toISOString().split('T')[0]});
+    setReservation({...reservation, pickupDate: value, dueDate: new Date(chosenDate.getFullYear(), chosenDate.getMonth(), chosenDate.getDate() + EXPIRATION).toISOString().split('T')[0]});
   }
+
+  const [tempISBN, setTempISBN] = useState('');
+
+
+  // const addISBN = (e) => {
+  //   e.preventDefault();
+  //   if(tempISBN !== '' && reservation.isbn.length < 2 && !reservation.isbn.includes(tempISBN))
+  //     setReservation({...reservation, isbn: [...reservation.isbn, tempISBN]});
+  //   setTempISBN('');
+  // }
+
+  const addISBN = (isbn) => {
+    if(isbn !== '' && reservation.isbn.length < 2 && !reservation.isbn.includes(isbn))
+      setReservation({...reservation, isbn: [...reservation.isbn, isbn]});
+  }
+
 
   return (
     <div className=''>
       <form className='space-y-6'>
         <h1 className='text-2xl font-semibold'>BORROW BOOK</h1>
         <div className='grid grid-cols-2 gap-5'>
-          <Input
-            variant="standard"
-            label="Email"
-            value={slip.username}
-            readOnly
-          />
-          <Input
-            variant="standard"
-            label="ISBN"
-            value={slip.isbn}
-            readOnly
-          />
+          <div className='col-span-2'>
+            <Input
+              variant="standard"
+              label="Email"
+              value={curUser.email}
+              readOnly
+            />
+          </div>
           <Input
             variant="standard"
             label="Received date (in 3 days)"
-            name='borrowDate'
-            value={slip.borrowDate}
+            name='pickupDate'
+            value={reservation.pickupDate}
             onChange={handleChangeInfo}
             type='date'
             min={(new Date()).toISOString().split('T')[0]}
@@ -74,9 +78,27 @@ const Transaction = () => {
           />
           <Input
             variant="standard"
-            label="Due date"
-            value={slip.dueDate}
+            label="Expected due date"
+            value={reservation.dueDate}
             type='date'
+            readOnly
+          />
+          <div className="relative">
+            <SearchBook
+              onClick={(item) => addISBN(item.isbn)}
+            />
+            {/* <button
+              className="absolute right-1 bottom-1 border-2 px-2 py-1 rounded-md bg-lightGrey font-medium"
+              type="submit"
+              onClick={addISBN}
+            >
+              Add
+            </button> */}
+          </div>
+          <Input
+            variant="standard"
+            label="ISBN"
+            value={reservation.isbn}
             readOnly
           />
         </div>
@@ -96,7 +118,7 @@ const Transaction = () => {
               ))}
             </tr>
           </thead>
-          <tbody>
+          {/* <tbody>
             {borrowBooks?.map((record, index) => (
               <tr key={index} className="even:bg-blue-gray-50/50 hover:bg-lightOrange/30">
                 <td className="p-2">
@@ -113,7 +135,7 @@ const Transaction = () => {
                 </td>
               </tr>
             ))}
-          </tbody>
+          </tbody> */}
         </table>
       </div>
     </div>
