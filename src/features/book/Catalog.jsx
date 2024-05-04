@@ -7,8 +7,15 @@ import SearchBar from '../../components/SearchBar'
 
 // Catalog page
 const Catalog = () => {
- const [data, setData] = useState([]);
- const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+//  const user = useSelector((state) => state.auth.currentUser.user);
+//  const token = useSelector((state) => state.auth.currentUser.refresh_token);
+
+//  const bookList = useSelector((state) => state.book.books?.allBooks);
+
+
   useEffect(() => {
     // Dummy data creation
     const dummyData = Array.from({ length: 24 }, (_, index) => ({
@@ -18,7 +25,8 @@ const Catalog = () => {
       ISBN: `ISBN-${index + 1}`,
     }));
     setData(dummyData);
-  }, []);
+    // callApi();
+  }, [currentPage]);
 
 
 

@@ -16,6 +16,11 @@ const initialState = {
     logout:{
         isFetching: false,
         error: false,
+    },
+
+    update: {
+        isFetching: false,
+        error: false
     }
 }
 
@@ -70,6 +75,22 @@ const authSlice = createSlice({
             state.logout.isFetching = false
             state.logout.error = true
         },
+
+        //Update
+        updateBegin: (state) => {
+            state.update.isFetching = true
+        },
+
+        updateSuccess: (state, action) => {
+            state.update.isFetching = false
+            state.currentUser.user = action.payload
+            state.update.error = false
+        },
+
+        updateFailure: (state) => {
+            state.update.isFetching = false
+            state.update.error = true
+        }
     }
 })
 
