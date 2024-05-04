@@ -31,17 +31,16 @@ const TABLE_RESERVATION_HEAD = ['Reserve date', 'Pickup date', 'ISBN', 'Book nam
 
 const History = () => {
   // BORROW
-  const filterSearch = ['Book name', 'ISBN']
-  const [selectedFilter, setSelectedFilter] = useState(filterSearch[0]);
-  const handleSearch = (e) => {
-    
-  }
-  const dateTypes = ['Borrow date', 'Due date', 'Return date', '']
-  const [selectedDateType, setSelectedDateType] = useState(dateTypes[0])
+  const dateTypes = ['None', 'Borrow date', 'Due date', 'Return date']
+  const [selectedDateType, setSelectedDateType] = useState(0)
   const [openMenu, setOpenMenu] = useState(false)
   const [dataBorrow, setDataBorrow] = useState([])
   const [totalPagesBorrow, setTotalPagesBorrow] = useState(1)
   const [currentPageBorrow, setCurrentPageBorrow] = useState(0)
+  const [selectedDatesBorrow, setSelectedDatesBorrow] = useState({
+    from: "",
+    to: ""
+  })
 
   // RENEW
   const filterSearchRenew = ['Book name', 'ISBN']
@@ -72,17 +71,13 @@ const History = () => {
   // ------------------- HANDLE PAGING -------------------
   // Paging borrows
   useEffect(() => {
-    getBorrows(currentPageBorrow).then((data) => {
+    getBorrows(currentPageBorrow, selectedDateType, selectedDatesBorrow.from, selectedDatesBorrow.to).then((data) => {
       if(data != null) {
         setTotalPagesBorrow(data.totalPages)
         setDataBorrow(data.transactions)
       }
-      else {
-        setTotalPagesBorrow(1)
-        setDataBorrow([])
-      }
     })
-  }, [currentPageBorrow])
+  }, [currentPageBorrow, selectedDateType, selectedDatesBorrow])
   const prevPageBorrow = () => {
     if(currentPageBorrow > 0) {
       setCurrentPageBorrow(currentPageBorrow - 1)
@@ -159,7 +154,7 @@ const History = () => {
                     ripple={false}
                     variant="text"
                     className="flex justify-between w-48 h-8 items-center gap-2 rounded-lg border border-blue-gray-200 px-2 normal-case font-normal text-sm">
-                    {selectedDateType}
+                    {dateTypes[selectedDateType]}
                     <BiChevronDown
                       size="1.3rem"
                       className={`transition-transform ${openMenu ? 'rotate-180' : ''}`}
@@ -173,43 +168,58 @@ const History = () => {
                         key={index}
                         value={item}
                         className="flex items-center gap-2"
-                        onClick={() => setSelectedDateType(item)}>
+                        onClick={() => setSelectedDateType(index)}>
                         <p className="">{item}</p>
                       </MenuItem>
                     )
                   })}
                 </MenuList>
               </Menu>
-              <p>from</p>
-              <div className='w-48'>
-                <Input
-                  labelProps={{
-                    className: "before:content-none after:content-none",
-                  }}
-                  containerProps={{
-                    className: "min-w-fit",
-                  }}
-                  className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                  type="date"
-                  // onChange={handleChangeInfo}
-                  name='filter-from'
-                />
-              </div>
-              <p>to</p>
-              <div className='w-48'>
-                <Input
-                  labelProps={{
-                    className: "before:content-none after:content-none",
-                  }}
-                  containerProps={{
-                    className: "min-w-fit",
-                  }}
-                  className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                  type="date"
-                  // onChange={handleChangeInfo}
-                  name='filter-to' 
-                />
-              </div>
+              {
+                selectedDateType !== 0 &&
+                <>
+                  <p>from</p>
+                  <div className='w-48'>
+                    <Input
+                      labelProps={{
+                        className: "before:content-none after:content-none",
+                      }}
+                      containerProps={{
+                        className: "min-w-fit",
+                      }}
+                      className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                      type="date"
+                      onChange={(e) =>
+                        setSelectedDatesBorrow({
+                          ...selectedDatesBorrow,
+                          from: e.target.value})
+                      }
+                      name='filter-from'
+                      value={selectedDatesBorrow.from}
+                    />
+                  </div>
+                  <p>to</p>
+                  <div className='w-48'>
+                    <Input
+                      labelProps={{
+                        className: "before:content-none after:content-none",
+                      }}
+                      containerProps={{
+                        className: "min-w-fit",
+                      }}
+                      className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                      type="date"
+                      onChange={(e) =>
+                        setSelectedDatesBorrow({
+                          ...selectedDatesBorrow,
+                          to: e.target.value})
+                      }
+                      name='filter-to'
+                      value={selectedDatesBorrow.to}
+                    />
+                  </div>
+                </>
+              }
             </div>
           </div>
         </div>
