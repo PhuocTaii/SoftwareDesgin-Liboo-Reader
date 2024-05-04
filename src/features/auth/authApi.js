@@ -1,15 +1,13 @@
 // call API here
-import axios from "axios";
+import axios from "../../config/axiosConfig";
 import {slice} from "./authSlice";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const url = "http://localhost:8080/api/authentication/"
-
 export const register = async (user, dispatch, navigate) => {
     dispatch(slice.registerBegin())
     try{
-        const res = await axios.post(`${url + 'signup'}`, {
+        const res = await axios.post('/authentication/signup', {
             ...user,
             birthDate: user.birthday,
         }, {
@@ -22,14 +20,14 @@ export const register = async (user, dispatch, navigate) => {
         console.log(err.response);
         dispatch(slice.registerFailure());
         toast.error('Login failed!');
-    }   
+    }
 }
 
 export const login = async (user, dispatch, navigate) => {
     dispatch(slice.signInBegin())
     try{
         console.log(user)
-        const res = await axios.post(`${url + 'login'}`, user, {
+        const res = await axios.post('/authentication/user/login', user, {
             'Content-Type': 'application/json'
         })
         dispatch(slice.signInSuccess(res.data))
@@ -46,7 +44,7 @@ export const logout = async (dispatch, token) => {
     dispatch(slice.logoutBegin());
     try{
         console.log(`Bearer ${token}`);
-        const res = await axios.post(`${url + 'logout'}`, {}, {
+        const res = await axios.post('/authentication/logout', {}, {
             headers: {
                 'Authorization': `Bearer ${token}`}
         })

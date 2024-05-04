@@ -1,5 +1,5 @@
 // History page
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { 
   Select, 
   Option,
@@ -11,27 +11,23 @@ import {
   Input
 } from '@material-tailwind/react';
 import Pagination from '../../components/Pagination';
-import SearchBar from '../../components/SearchBar';
 import {formatDate} from '../../helpers/dateFormat';
 import { BiChevronDown,BiRefresh, BiMessageAltError } from 'react-icons/bi'
 import DialogConfirm from '../../components/DialogConfirm';
+import { getBorrows, getRenews, getReservations } from './transactionApi';
+import { useSelector } from 'react-redux';
 
 const StatusChip = ({status}) => {
-  switch (status) {
-    case 'Pending':
-      return <div className="px-2 py-1 bg-gray-300 rounded-full text-xs w-20 flex justify-center">Pending</div>
-    case 'Rejected':
-      return <div className="px-2 py-1 bg-deep-orange-400 rounded-full text-xs w-20 flex justify-center">Rejected</div>
-    case 'Accepted':
-      return <div className="px-2 py-1 bg-amber-400 rounded-full text-xs w-20 flex justify-center">Accepted</div>
-    default:
-      return <div className="px-2 py-1 bg-green-200 rounded-full text-xs w-20 flex justify-center">Done</div>
+  if(status) {
+    return <div className="px-2 py-1 bg-green-200 rounded-full text-xs w-20 text-center text-nowrap">PICKED-UP</div>
   }
+  else
+    return <div className="px-2 py-1 bg-gray-300 rounded-full text-xs w-20 text-center text-nowrap">NOT YET</div>
 }
 
-const TABLE_BORROW_HEAD = ['ISBN', 'Book name', 'Borrow date', 'Due date', 'Return date', 'Fine', 'Renewal count', ''];
+const TABLE_BORROW_HEAD = ['Borrow date', 'ISBN', 'Book name', 'Due date', 'Return date', 'Renewal count', '', 'Fine'];
 const TABLE_RENEWAL_HEAD = ['ISBN', 'Book name', 'Renew date'];
-const TABLE_RESERVATION_HEAD = ['ISBN', 'Book name', 'Reserve date', 'Pickup date', 'Status'];
+const TABLE_RESERVATION_HEAD = ['Reserve date', 'Pickup date', 'ISBN', 'Book name', 'Status'];
 
 const History = () => {
   // BORROW
@@ -43,35 +39,9 @@ const History = () => {
   const dateTypes = ['Borrow date', 'Due date', 'Return date', '']
   const [selectedDateType, setSelectedDateType] = useState(dateTypes[0])
   const [openMenu, setOpenMenu] = useState(false)
-  const [dataBorrow, setDataBorrow] = useState([
-    {
-      ISBN: 'ISBN-1',
-      bookName: 'Book name',
-      borrowDate: Date.now(),
-      dueDate: Date.now(),
-      returnDate: Date.now(),
-      fine: 0,
-      renewalCount: 0,
-    },
-    {
-      ISBN: 'ISBN-1',
-      bookName: 'Book name',
-      borrowDate: Date.now(),
-      dueDate: Date.now(),
-      returnDate: Date.now(),
-      fine: 0,
-      renewalCount: 0,
-    },
-    {
-      ISBN: 'ISBN-1',
-      bookName: 'Book name',
-      borrowDate: Date.now(),
-      dueDate: Date.now(),
-      returnDate: Date.now(),
-      fine: 0,
-      renewalCount: 0,
-    },
-  ]);
+  const [dataBorrow, setDataBorrow] = useState([])
+  const [totalPagesBorrow, setTotalPagesBorrow] = useState(1)
+  const [currentPageBorrow, setCurrentPageBorrow] = useState(0)
 
   // RENEW
   const filterSearchRenew = ['Book name', 'ISBN']
@@ -79,23 +49,9 @@ const History = () => {
   const handleSearchRenew = (e) => {
     
   }
-  const [dataRenew, setDataRenew] = useState([
-    {
-      ISBN: 'ISBN-1',
-      bookName: 'Book name',
-      renewDate: Date.now(),
-    },
-    {
-      ISBN: 'ISBN-1',
-      bookName: 'Book name',
-      renewDate: Date.now(),
-    },
-    {
-      ISBN: 'ISBN-1',
-      bookName: 'Book name',
-      renewDate: Date.now(),
-    },
-  ]);
+  const [dataRenew, setDataRenew] = useState([]);
+  const [totalPagesRenew, setTotalPagesRenew] = useState(1)
+  const [currentPageRenew, setCurrentPageRenew] = useState(0)
 
   // RESERVE
   const filterSearchReserve = ['Book name', 'ISBN']
@@ -106,32 +62,87 @@ const History = () => {
   const dateTypesReserve = ['Reserve date', 'Pickup date']
   const [selectedDateTypeReserve, setSelectedDateTypeReserve] = useState(dateTypesReserve[0])
   const [openMenuReserve, setOpenMenuReserve] = useState(false)
-  const [dataReserve, setDataReserve] = useState([
-    {
-      ISBN: 'ISBN-1',
-      bookName: 'Book name',
-      reserveDate: Date.now(),
-      pickupDate: Date.now(),
-      status: 'Pending',
-    },
-    {
-      ISBN: 'ISBN-1',
-      bookName: 'Book name',
-      reserveDate: Date.now(),
-      pickupDate: Date.now(),
-      status: 'Rejected',
-    },
-    {
-      ISBN: 'ISBN-1',
-      bookName: 'Book name',
-      reserveDate: Date.now(),
-      pickupDate: Date.now(),
-      status: 'Accepted',
-    },
-  ]);
+  const [dataReserve, setDataReserve] = useState([]);
+  const [totalPagesReserve, setTotalPagesReserve] = useState(1)
+  const [currentPageReserve, setCurrentPageReserve] = useState(0)
 
   const [openConfirm, setOpenConfirm] = useState(false)
   const [openReport, setOpenReport] = useState(false)
+
+  // ------------------- HANDLE PAGING -------------------
+  // Paging borrows
+  useEffect(() => {
+    getBorrows(currentPageBorrow).then((data) => {
+      if(data != null) {
+        setTotalPagesBorrow(data.totalPages)
+        setDataBorrow(data.transactions)
+      }
+      else {
+        setTotalPagesBorrow(1)
+        setDataBorrow([])
+      }
+    })
+  }, [currentPageBorrow])
+  const prevPageBorrow = () => {
+    if(currentPageBorrow > 0) {
+      setCurrentPageBorrow(currentPageBorrow - 1)
+    }
+  }
+  const nextPageBorrow = () => {
+    if(currentPageBorrow < totalPagesBorrow - 1) {
+      setCurrentPageBorrow(currentPageBorrow + 1)
+    }
+  }
+
+  // Paging renewals
+  useEffect(() => {
+    getRenews(currentPageRenew).then((data) => {
+      console.log(data);
+      if(data != null) {
+        setTotalPagesRenew(data.totalPages)
+        setDataRenew(data.renewals)
+      }
+      else {
+        setTotalPagesRenew(1)
+        setDataRenew([])
+      }
+    })
+  }, [currentPageRenew])
+  const prevPageRenew = () => {
+    if(currentPageRenew > 0) {
+      setCurrentPageRenew(currentPageRenew - 1)
+    }
+  }
+  const nextPageRenew = () => {
+    if(currentPageRenew < totalPagesRenew - 1) {
+      setCurrentPageRenew(currentPageRenew + 1)
+    }
+  }
+
+  // Paging reservations
+  useEffect(() => {
+    getReservations(currentPageReserve).then((data) => {
+      console.log(data);
+      if(data != null) {
+        setTotalPagesReserve(data.totalPages)
+        setDataReserve(data.reservations)
+      }
+      else {
+        setTotalPagesReserve(1)
+        setDataReserve([])
+      }
+    })
+  }, [currentPageReserve])
+  const prevPageReserve = () => {
+    if(currentPageReserve > 0) {
+      setCurrentPageReserve(currentPageReserve - 1)
+    }
+  }
+  const nextPageReserve = () => {
+    if(currentPageReserve < totalPagesReserve - 1) {
+      setCurrentPageReserve(currentPageReserve + 1)
+    }
+  }
 
   return (
     <div className={`flex w-full h-full flex-col`}>
@@ -139,7 +150,6 @@ const History = () => {
       <div>
         <div className='flex justify-between py-4 flex-col'>
           <p className='font-semibold text-2xl pb-4'>BORROWS</p>
-          {/* Search bar */}
           <div className='w-full flex flex-col justify-between gap-4'>
             <div className='flex gap-2 items-center'>
               <p>Filter</p>
@@ -177,7 +187,7 @@ const History = () => {
                     className: "before:content-none after:content-none",
                   }}
                   containerProps={{
-                    className: "min-w-0",
+                    className: "min-w-fit",
                   }}
                   className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                   type="date"
@@ -192,7 +202,7 @@ const History = () => {
                     className: "before:content-none after:content-none",
                   }}
                   containerProps={{
-                    className: "min-w-0",
+                    className: "min-w-fit",
                   }}
                   className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                   type="date"
@@ -204,7 +214,7 @@ const History = () => {
           </div>
         </div>
         <div className='w-full min-h-max overflow-x-scroll'>
-          <table className="w-full min-w-max table-auto text-left">
+          <table className="w-full min-w-max table-auto text-left border-collapse">
             <thead className='sticky top-0'>
               <tr>
                 {TABLE_BORROW_HEAD.map((head, index) => (
@@ -215,54 +225,74 @@ const History = () => {
               </tr>
             </thead>
             <tbody>
-              {dataBorrow?.map((record) => (
-                <tr key={record._id} className="even:bg-blue-gray-50/50 hover:bg-lightOrange/30">
-                  <td className="p-2">
-                    <p>{record.ISBN}</p>
-                  </td>
-                  <td className="p-2">
-                    <p>{record.bookName}</p>
-                  </td>
-                  <td className="p-2">
-                    <p>{formatDate(record.borrowDate)}</p>
-                  </td>
-                  <td className="p-2">
-                    <p>{formatDate(record.dueDate)}</p>
-                  </td>
-                  <td className="p-2">
-                    <p>{formatDate(record.returnDate)}</p>
-                  </td>
-                  <td className="p-2">
-                    <p>{record.fine}</p>
-                  </td>
-                  <td className="p-2">
-                    <p>{record.renewalCount}</p>
-                  </td>
-                  <td className="p-2 pr-4 space-x-6 flex justify-end">
-                    <BiRefresh 
-                      size='1.5rem'
-                      onClick={() => setOpenConfirm(!openConfirm)}
-                      className='hover:cursor-pointer'
-                    />
-                    <BiMessageAltError
-                      size='1.5rem'
-                      onClick={() => setOpenReport(!openReport)}
-                      className='hover:cursor-pointer'
-                    />
-                  </td>
-                </tr>
+            {dataBorrow?.map((record) => (
+              <>
+                {record?.transactionBooks.map((detail, index) => (
+                  <tr key={detail.id} className="">
+                    {index === 0 && 
+                      <td className="p-2 border border-blue-gray-100" rowSpan={record.transactionBooks.length}>
+                        <p>{formatDate(record.borrowedDate)}</p>
+                      </td>
+                    }
+                    <td className='p-2 border border-blue-gray-50'>
+                      <p>{detail.book.isbn}</p>
+                    </td>
+                    <td className='p-2 border border-blue-gray-50'>
+                      <p>{detail.book.name}</p>
+                    </td>
+                    <td className='p-2 border border-blue-gray-50'>
+                      <p>{formatDate(detail.dueDate)}</p>
+                    </td>
+                    <td className='p-2 border border-blue-gray-50'>
+                      <p>{formatDate(detail.returnDate)}</p>
+                    </td>
+                    <td className='p-2 border border-blue-gray-50'>
+                      <p>{detail.renewalCount}</p>
+                    </td>
+                    <td className="p-2 border border-blue-gray-100">
+                      <div className='w-fit mx-auto'>
+                        <Button 
+                          variant="outlined" 
+                          className='p-2 text-xs normal-case font-normal mr-2'
+                          onClick={() => setOpenConfirm(!openConfirm)}
+                        >
+                          Renew
+                        </Button>
+                        <Button 
+                          variant="outlined" 
+                          className='p-2 text-xs normal-case font-normal'
+                          onClick={() => setOpenReport(!openReport)}
+                        >
+                          Report lost book
+                        </Button>
+                      </div>
+                    </td>
+                    {index === 0 && 
+                      <td className="p-2 border border-blue-gray-100" rowSpan={record.transactionBooks.length}>
+                        <p>{record.fine}</p>
+                      </td>
+                    }
+                  </tr>
+                ))}
+                </>
               ))}
             </tbody>
           </table>
         </div>
-        <Pagination/>
+        <Pagination 
+          className={"mx-auto w-fit"} 
+          numPages={totalPagesBorrow} 
+          currentPage={currentPageBorrow}
+          onPageClick={(page) => setCurrentPageBorrow(page)}
+          onPrevClick={prevPageBorrow}
+          onNextClick={nextPageBorrow}
+          />
       </div>
 
       {/* -------------------RENEW------------------- */}
       <div>
         <div className='flex justify-between py-4 flex-col'>
           <p className='font-semibold text-2xl pb-4'>RENEWALS</p>
-          {/* Search bar */}
           <div className='w-full flex flex-col justify-between gap-4'>
             <div className='flex gap-2 items-center'>
               <p>Filter <span className='font-semibold'>Renew date</span> from</p>
@@ -272,7 +302,7 @@ const History = () => {
                     className: "before:content-none after:content-none",
                   }}
                   containerProps={{
-                    className: "min-w-0",
+                    className: "min-w-fit",
                   }}
                   className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                   type="date"
@@ -287,7 +317,7 @@ const History = () => {
                     className: "before:content-none after:content-none",
                   }}
                   containerProps={{
-                    className: "min-w-0",
+                    className: "min-w-fit",
                   }}
                   className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                   type="date"
@@ -311,29 +341,35 @@ const History = () => {
             </thead>
             <tbody>
               {dataRenew?.map((record) => (
-                <tr key={record._id} className="even:bg-blue-gray-50/50 hover:bg-lightOrange/30">
+                <tr key={record.id} className="even:bg-blue-gray-50/50 hover:bg-lightOrange/30">
                   <td className="p-2">
-                    <p>{record.ISBN}</p>
+                    <p>{record.transactionBook?.book?.isbn}</p>
                   </td>
                   <td className="p-2">
-                    <p>{record.bookName}</p>
+                    <p>{record.transactionBook?.book?.name}</p>
                   </td>
                   <td className="p-2">
-                    <p>{formatDate(record.renewDate)}</p>
+                    <p>{formatDate(record.requestDate)}</p>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <Pagination/>
+        <Pagination 
+          className={"mx-auto w-fit"} 
+          numPages={totalPagesRenew} 
+          currentPage={currentPageRenew}
+          onPageClick={(page) => setCurrentPageRenew(page)}
+          onPrevClick={prevPageRenew}
+          onNextClick={nextPageRenew}
+          />
       </div>
 
       {/* -------------------RESERVATIONS------------------- */}
       <div>
         <div className='flex justify-between py-4 flex-col'>
           <p className='font-semibold text-2xl pb-4'>RESERVATIONS</p>
-          {/* Search bar */}
           <div className='w-full flex flex-col justify-between gap-4'>
             <div className='flex gap-2 items-center'>
               <p>Filter</p>
@@ -371,7 +407,7 @@ const History = () => {
                     className: "before:content-none after:content-none",
                   }}
                   containerProps={{
-                    className: "min-w-0",
+                    className: "min-w-fit",
                   }}
                   className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                   type="date"
@@ -386,7 +422,7 @@ const History = () => {
                     className: "before:content-none after:content-none",
                   }}
                   containerProps={{
-                    className: "min-w-0",
+                    className: "min-w-fit",
                   }}
                   className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                   type="date"
@@ -410,28 +446,45 @@ const History = () => {
             </thead>
             <tbody>
               {dataReserve?.map((record) => (
-                <tr key={record._id} className="even:bg-blue-gray-50/50 hover:bg-lightOrange/30">
-                  <td className="p-2">
-                    <p>{record.ISBN}</p>
-                  </td>
-                  <td className="p-2">
-                    <p>{record.bookName}</p>
-                  </td>
-                  <td className="p-2">
-                    <p>{formatDate(record.reserveDate)}</p>
-                  </td>
-                  <td className="p-2">
-                    <p>{formatDate(record.pickupDate)}</p>
-                  </td>
-                  <td className="p-2">
-                    <StatusChip status={record.status} />
-                  </td>
-                </tr>
+                <>
+                {record?.books.map((detail, index) => (
+                  <tr key={`${record.id}${detail.id}`} className="">
+                    {index === 0 && 
+                      <>
+                        <td className="p-2 border border-blue-gray-100" rowSpan={record.books.length}>
+                          <p>{formatDate(record.reservedDate)}</p>
+                        </td>
+                        <td className="p-2 border border-blue-gray-100" rowSpan={record.books.length}>
+                          <p>{formatDate(record.pickupDate)}</p>
+                        </td>
+                      </>
+                    }
+                    <td className='p-2 border border-blue-gray-50'>
+                      <p>{detail.isbn}</p>
+                    </td>
+                    <td className='p-2 border border-blue-gray-50'>
+                      <p>{detail.name}</p>
+                    </td>
+                    {index === 0 && 
+                      <td className="p-2 border border-blue-gray-100" rowSpan={record.books.length}>
+                        <StatusChip status={record.status} />
+                      </td>
+                    }
+                  </tr>
+                ))}
+                </>
               ))}
             </tbody>
           </table>
         </div>
-        <Pagination/>
+        <Pagination 
+          className={"mx-auto w-fit"} 
+          numPages={totalPagesReserve} 
+          currentPage={currentPageReserve}
+          onPageClick={(page) => setCurrentPageReserve(page)}
+          onPrevClick={prevPageReserve}
+          onNextClick={nextPageReserve}
+          />
       </div>
 
       <DialogConfirm 
