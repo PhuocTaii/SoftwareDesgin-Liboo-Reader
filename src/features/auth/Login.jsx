@@ -20,14 +20,14 @@ const Login = () => {
     setAccount({...account, [name]: value});
   }
 
-  const handleSignin = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     login(account, dispatch, navigate);
   }
 
   return (
     <form className="flex flex-col items-center gap-8 w-full"
-      onSubmit={(e) => handleSignin(e)}
+      onSubmit={(e) => handleLogin(e)}
     >
       <div className="w-full flex flex-col gap-3">
         <Input 
