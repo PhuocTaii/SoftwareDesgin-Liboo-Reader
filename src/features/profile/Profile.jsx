@@ -100,7 +100,7 @@ const Profile = () => {
           <Input
             variant="standard"
             label="ID number"
-            required
+            readOnly
             onInput={(e) =>
               (e.target.value = e.target.value
                 .replace(/[^0-9.]/g, "")

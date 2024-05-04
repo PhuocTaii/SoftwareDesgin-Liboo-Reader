@@ -26,7 +26,6 @@ export const register = async (user, dispatch, navigate) => {
 export const login = async (user, dispatch, navigate) => {
     dispatch(slice.signInBegin())
     try{
-        console.log(user)
         const res = await axios.post('/authentication/user/login', user, {
             'Content-Type': 'application/json'
         })
@@ -42,7 +41,6 @@ export const login = async (user, dispatch, navigate) => {
 export const logout = async (dispatch, token) => {
     dispatch(slice.logoutBegin());
     try{
-        console.log(`Bearer ${token}`);
         const res = await axios.post('/authentication/logout', {}, {
             headers: {
                 'Authorization': `Bearer ${token}`}
