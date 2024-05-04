@@ -10,22 +10,22 @@ const Catalog = () => {
  const [data, setData] = useState([]);
  const [currentPage, setCurrentPage] = useState(1);
 
- const user = useSelector((state) => state.auth.currentUser.user);
- const token = useSelector((state) => state.auth.currentUser.refresh_token);
+//  const user = useSelector((state) => state.auth.currentUser.user);
+//  const token = useSelector((state) => state.auth.currentUser.refresh_token);
 
 //  const bookList = useSelector((state) => state.book.books?.allBooks);
 
 
   useEffect(() => {
-    // // Dummy data creation
-    // const dummyData = Array.from({ length: 24 }, (_, index) => ({
-    //   _id: index + 1,
-    //   name: `Book ${index + 1}`,
-    //   image: dummyImage,
-    //   ISBN: `ISBN-${index + 1}`,
-    // }));
-    // setData(dummyData);
-    callApi();
+    // Dummy data creation
+    const dummyData = Array.from({ length: 24 }, (_, index) => ({
+      _id: index + 1,
+      name: `Book ${index + 1}`,
+      image: dummyImage,
+      ISBN: `ISBN-${index + 1}`,
+    }));
+    setData(dummyData);
+    // callApi();
   }, [currentPage]);
 
 
