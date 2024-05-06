@@ -1,7 +1,7 @@
 // call API here
 import { instance } from "../../config/axiosConfig";
 
-export const getBorrows = async (page, filterIdx="", dateFrom="", dateTo="") => {
+export const getBorrows = async (page, filterIdx, dateFrom, dateTo) => {
   const filterOption = () => {
       switch(filterIdx){
       case 1:
@@ -23,7 +23,6 @@ export const getBorrows = async (page, filterIdx="", dateFrom="", dateTo="") => 
     return null
 
   try{
-    console.log("calling api")
     const res = await instance.get(`/user/transactions?page=${page}&filter-by=${filterOption()}&from=${dateFrom}&to=${dateTo}`);
     return res.data;
   } catch (err){
@@ -32,18 +31,40 @@ export const getBorrows = async (page, filterIdx="", dateFrom="", dateTo="") => 
   }
 }
 
-export const getRenews = async (page) => {
+export const getRenews = async (page, filterIdx, dateFrom, dateTo) => {
+  if(filterIdx !== 0 && (dateFrom === "" || dateTo === ""))
+    return null
+
+  console.log("calling api")
   try{
-    const res = await instance.get(`/user/renewals?page=${page}`);
+    const res = await instance.get(`/user/renewals?page=${page}&from=${dateFrom}&to=${dateTo}`);
     return res.data;
   } catch (err){
     console.log(err.response);
     return null
   }
 }
-export const getReservations = async (page) => {
+export const getReservations = async (page, filterIdx, dateFrom, dateTo) => {
+  const filterOption = () => {
+    switch(filterIdx){
+    case 1:
+      return "reserve-date"
+    case 2:
+      return "pickup-date"
+    default:
+      {
+        dateFrom = ""
+        dateTo = ""
+        return ""
+      }
+  }
+}
+
+  if(filterOption() !== "" && (dateFrom === "" || dateTo === ""))
+    return null
+
   try{
-    const res = await instance.get(`/user/reservations?page=${page}`);
+    const res = await instance.get(`/user/reservations?page=${page}&filter-by=${filterOption()}&from=${dateFrom}&to=${dateTo}`);
     return res.data;
   } catch (err){
     console.log(err.response);
