@@ -1,4 +1,3 @@
-// Membership page
 import {
   Card,
   CardBody,
@@ -11,35 +10,65 @@ import {
 } from "@material-tailwind/react";
 import CustomButton from "../../components/CustomButton";
 import { currencyFormat } from "../../helpers/currency";
+import {getAllMemberships} from './membershipApi';
+import React, {useEffect, useState} from 'react'
+import {membershipPayment} from './membershipApi';
+import { useDispatch, useSelector } from 'react-redux'
 
-const memberships = [
-  {
-    id: 1,
-    type: "Regular",
-    membershipFee: 50000,
-    maxBooksAllowed: 3,
-    maxRenewalsAllowed: 2,
-    reservedBooksAllowed: 2,
-  },
-  {
-    id: 2,
-    type: "Premium",
-    membershipFee: 75000,
-    maxBooksAllowed: 5,
-    maxRenewalsAllowed: 3,
-    reservedBooksAllowed: 3,
-  },
-  {
-    id: 3,
-    type: "Student",
-    membershipFee: 30000,
-    maxBooksAllowed: 4,
-    maxRenewalsAllowed: 2,
-    reservedBooksAllowed: 1,
-  }
-]
+
+
+
+
+// const memberships = [
+//   {
+//     id: 1,
+//     type: "Regular",
+//     membershipFee: 50000,
+//     maxBooksAllowed: 3,
+//     maxRenewalsAllowed: 2,
+//     reservedBooksAllowed: 2,
+//   },
+//   {
+//     id: 2,
+//     type: "Premium",
+//     membershipFee: 75000,
+//     maxBooksAllowed: 5,
+//     maxRenewalsAllowed: 3,
+//     reservedBooksAllowed: 3,
+//   },
+//   {
+//     id: 3,
+//     type: "Student",
+//     membershipFee: 30000,
+//     maxBooksAllowed: 4,
+//     maxRenewalsAllowed: 2,
+//     reservedBooksAllowed: 1,
+//   }
+// ]
 
 const Membership = () => {
+  const [memberships, setMemberships] = useState([]);
+  const curUser = useSelector((state) => state.auth.currentUser.user);
+
+
+  useEffect(() => {
+    getAllMemberships().then((data) => {
+      if(data){
+        setMemberships(data);
+      }
+    })
+  }, [])
+
+
+
+  const handleOrder = (membership) => {
+    console.log(membership)
+    membershipPayment(membership, curUser).then((data) => {
+      window.location.href = data
+    })
+  };
+
+  
   return (
     <div className="flex w-full h-full flex-col gap-4">
       <h1 className='text-2xl font-semibold text-center'>MEMBERSHIP</h1>
@@ -62,13 +91,13 @@ const Membership = () => {
                   {membership.type}
                 </Typography>
                 <List className="w-full">
-                  <ListItem className=""><p>Max number of books borrowed at a time: <span className="font-semibold">{membership.maxBooksAllowed}</span></p></ListItem>
-                  <ListItem className=""><p>Max number of times to renew a book: <span className="font-semibold">{membership.maxRenewalsAllowed}</span></p></ListItem>
-                  <ListItem className=""><p>Max number of books reserved at a time: <span className="font-semibold">{membership.reservedBooksAllowed}</span></p></ListItem>
+                  <ListItem className=""><p>Max number of books borrowed at a time: <span className="font-semibold">{membership.maxBook}</span></p></ListItem>
+                  <ListItem className=""><p>Max number of times to renew a book: <span className="font-semibold">{membership.maxRenewal}</span></p></ListItem>
+                  <ListItem className=""><p>Max number of books reserved at a time: <span className="font-semibold">{membership.reserve}</span></p></ListItem>
                 </List>
               </CardBody>
               <CardFooter className="pt-0 w-full flex justify-center">
-                <CustomButton label={"Start now"} classes={"w-fit"} />
+                <CustomButton onClick={() => handleOrder(membership)} label={"Start now"} classes={"w-fit"} />
               </CardFooter>
             </Card>
           ))}
