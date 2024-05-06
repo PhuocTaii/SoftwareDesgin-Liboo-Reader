@@ -34,6 +34,7 @@ export const getReservations = async (page) => {
 export const reserveBook = async (reservation) => {
   try{
     const res = await instance.post(`/user/add-reservation`, reservation);
+    toast.success(res.data.message);
     return res.data
   } catch (err){
     toast.error(err.response.data);

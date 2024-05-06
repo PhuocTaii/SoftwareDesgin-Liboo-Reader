@@ -26,10 +26,20 @@ export const getBookByIsbn = async (isbn) => {
 
 export const getBookByName = async (name) => {
     try{
-        const res = await instance.get(`/book/name?name=${name}`);
+        const res = await instance.get(`/books?name=${name}`);
         return res.data;
     } catch (err){
         console.log(err.response);
         return null
     }
+}
+
+export const searchBookByIsbn = async (isbn) => {
+  try{
+      const res = await instance.get(`/books?isbn=${isbn}`);
+      return res.data;
+  } catch (err){
+      console.log(err.response);
+      return null
+  }
 }

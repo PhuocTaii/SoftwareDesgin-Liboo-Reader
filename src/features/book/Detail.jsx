@@ -21,11 +21,12 @@ const Detail = () => {
         setCurrentBook(null)
       }
     })
-  })
+  }, [])
+
   const navigate = useNavigate();
 
   const gotoBorrow = () => {
-      navigate(`/transaction/${currentBook.isbn}`)
+      navigate(`/transaction`, { state: { currentIsbn: currentBook.isbn } })
   }
   
   return (
