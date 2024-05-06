@@ -6,10 +6,12 @@ import { useNavigate } from "react-router-dom";
 import {formatDate} from '../../helpers/dateFormat'
 import { useDispatch, useSelector } from 'react-redux'
 import SearchBook from '../../components/SearchBook'
+import {reserveBook, getNotPickUpBooks} from './transactionApi'
+import { toast } from 'react-toastify';
 
 const EXPIRATION = 30;
 
-const TABLE_HEAD = ['ISBN', 'Reserve date' , 'Pickup date', 'Status']
+const TABLE_HEAD = ['ISBN', 'Reserve date' , 'Pickup date', 'Book name']
 // Transaction page
 const Transaction = () => {
 
@@ -20,10 +22,8 @@ const Transaction = () => {
   const curUser = useSelector((state) => state.auth.currentUser.user);
 
   const [reservation, setReservation] = useState({
-    user: curUser.id, 
-    isbn: [id ? id : ''],
-    pickupDate: today.toISOString().split('T')[0],
-    dueDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() + EXPIRATION).toISOString().split('T')[0]
+    isbn: id?[id]:[],
+    pickupDate: new Date(new Date().getTime() + (24 * 60 * 60 * 1000)).toISOString().split('T')[0]
   })
 
   const navigate = useNavigate();
@@ -46,16 +46,37 @@ const Transaction = () => {
   //   setTempISBN('');
   // }
 
+  const handleAddReservation = (e) => {
+    e.preventDefault();
+    console.log(reservation);
+    reserveBook(reservation).then((data) => {
+      if(data){
+        toast.success(data.message);
+        setNotPickUpBooks([...notPickUpBooks, data.reservation]);
+      } else{
+        setReservation({...reservation, isbn: []});
+      }
+    })
+  }
+
   const addISBN = (isbn) => {
     if(isbn !== '' && reservation.isbn.length < 2 && !reservation.isbn.includes(isbn))
       setReservation({...reservation, isbn: [...reservation.isbn, isbn]});
   }
 
+  const [notPickUpBooks, setNotPickUpBooks] = useState([]);
 
+  useEffect(() => {
+    getNotPickUpBooks().then((data) => {
+      if(data){
+        setNotPickUpBooks(data);
+      }
+    })
+  }, [])
   return (
     <div className=''>
-      <form className='space-y-6'>
-        <h1 className='text-2xl font-semibold'>BORROW BOOK</h1>
+      <form className='space-y-6' onSubmit={handleAddReservation}>
+        <h1 className='text-2xl font-semibold'>RESERVE BOOK</h1>
         <div className='grid grid-cols-2 gap-5'>
           <div className='col-span-2'>
             <Input
@@ -72,8 +93,8 @@ const Transaction = () => {
             value={reservation.pickupDate}
             onChange={handleChangeInfo}
             type='date'
-            min={(new Date()).toISOString().split('T')[0]}
-            max={new Date(new Date().getTime() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0]}
+            min={new Date(new Date().getTime() + (24 * 60 * 60 * 1000)).toISOString().split('T')[0]}
+            max={new Date(new Date().getTime() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0]}
             required
           />
           <Input
@@ -103,11 +124,11 @@ const Transaction = () => {
           />
         </div>
         <div className='flex justify-center'>
-          <CustomButton label='done' type='submit' disabled={id ? false : true} />
+          <CustomButton label='done' type='submit' />
         </div>
       </form>
       <div className='space-y-6 mt-8'>
-        <p className='text-2xl font-semibold'>YOUR RESERVATIONS</p>
+        <p className='text-2xl font-semibold'>YOU HAVE NOT PICK UP YET</p>
         <table className="w-full min-w-max table-auto text-left">
           <thead className='sticky top-0'>
             <tr>
@@ -136,6 +157,31 @@ const Transaction = () => {
               </tr>
             ))}
           </tbody> */}
+          {notPickUpBooks?.map((record) => (
+                <>
+                {record?.books.map((detail, index) => (
+                  <tr key={`${record.id}${detail.id}`} className="">
+                    <td className='p-2 border border-blue-gray-50'>
+                      <p>{detail.isbn}</p>
+                    </td>
+                    {index === 0 && 
+                      <>
+                        <td className="p-2 border border-blue-gray-100" rowSpan={record.books.length}>
+                          <p>{formatDate(record.reservedDate)}</p>
+                        </td>
+                        <td className="p-2 border border-blue-gray-100" rowSpan={record.books.length}>
+                          <p>{formatDate(record.pickupDate)}</p>
+                        </td>
+                      </>
+                    }
+
+                    <td className='p-2 border border-blue-gray-50'>
+                      <p>{detail.name}</p>
+                    </td>
+                  </tr>
+                ))}
+                </>
+              ))}
         </table>
       </div>
     </div>
