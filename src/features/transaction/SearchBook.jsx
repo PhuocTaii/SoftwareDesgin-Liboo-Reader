@@ -1,24 +1,15 @@
 import React, {useState, useEffect, useRef} from "react";
-import { BiSearch, BiChevronDown } from "react-icons/bi";
 import {
   Input,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Button,
 } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
-import {getBookByName} from '../features/book/bookApi'
+import {getBookByName} from '../book/bookApi'
 import {debounce} from 'lodash'
 import {useCallback} from 'react'
 
-const SearchBook = ({onClick}) => {
+const SearchBook = ({onClick, bookName, setBookName}) => {
   const [bookList, setBookList] = useState([]);
-  const [name, setName] = useState('');
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
-
 
   function searchBook(name) {
     getBookByName(name).then(res => setBookList(res));
@@ -34,7 +25,7 @@ const SearchBook = ({onClick}) => {
 
   const handleSearchBook = (e) => {
     const searchTerm = e.target.value;
-    setName(searchTerm);
+    setBookName(searchTerm);
 
     if (searchTerm === '') {
       setBookList([]);
@@ -63,6 +54,7 @@ const SearchBook = ({onClick}) => {
   return (
     <div className='w-full relative'>
       <Input
+        value={bookName}
         variant="standard"
         type="text"
         label="Input to search books"
