@@ -10,7 +10,7 @@ import {
 import CustomButton from "./CustomButton";
 import { BiX } from "react-icons/bi";
 
-const DialogConfirm = ({open, handleOpen, title, content, icon = null, haveButtons = true}) => {
+const DialogConfirm = ({open, handleOpen, title, content, onClick, icon = null, haveButtons = true}) => {
   return (
     <Dialog
       open={open}
@@ -45,7 +45,11 @@ const DialogConfirm = ({open, handleOpen, title, content, icon = null, haveButto
           >
             <span>Cancel</span>
           </Button>
-          <CustomButton label='Yes, confirm' classes='w-fit' type='submit' />
+          <CustomButton 
+            label='Yes, confirm' 
+            classes='w-fit'
+            onClick={onClick}
+          />
         </DialogFooter>
       }
     </Dialog>

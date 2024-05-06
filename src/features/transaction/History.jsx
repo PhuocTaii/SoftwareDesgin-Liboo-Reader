@@ -12,7 +12,8 @@ import Pagination from '../../components/Pagination';
 import {formatDate} from '../../helpers/dateFormat';
 import { BiChevronDown,BiRefresh, BiMessageAltError } from 'react-icons/bi'
 import DialogConfirm from '../../components/DialogConfirm';
-import { getBorrows, getRenews, getReservations } from './transactionApi';
+import { getBorrows, getRenews, getReservations, requestRenew } from './transactionApi';
+import {currencyFormat} from '../../helpers/currency'
 
 const StatusChip = ({status}) => {
   if(status) {
@@ -128,6 +129,7 @@ const History = () => {
   useEffect(() => {
     getBorrows(dataBorrow.pageNumber, selectedFilter, selectedDatesBorrow.from, selectedDatesBorrow.to).then((data) => {
       if(data != null) {
+        console.log(data)
         setDataBorrow(data)
       }
     })
@@ -179,6 +181,59 @@ const History = () => {
     if(dataReserve.pageNumber < dataReserve.totalPages - 1) {
       setDataReserve({...dataReserve, pageNumber: dataReserve.pageNumber + 1})
     }
+  }
+
+  // ------------------- HANDLE ACTIONS -------------------
+  const [selectedId, setSelectedId] = useState(0)
+  const handleRenew = () => {
+    requestRenew(selectedId).then((data) => {
+      if(data != null) {
+        // update returnDate and renewalCount in borrows
+        setDataBorrow({
+          ...dataBorrow,
+          transactions: dataBorrow.transactions.map((transaction) => {
+            return {
+              ...transaction,
+              transactionBooks: transaction.transactionBooks.map((tb) => {
+                if(tb.id === selectedId) {
+                  return {
+                    ...tb,
+                    dueDate: data.transactionBook.dueDate,
+                    renewalCount: data.transactionBook.renewalCount
+                  }
+                }
+                return tb
+              })
+            }
+          })
+        })
+
+        // add renew to renewals
+        getRenews(dataRenew.pageNumber, selectedFilterRenew, selectedDatesRenew.from, selectedDatesRenew.to).then((data) => {
+          if(data != null) {
+            setDataRenew(data)
+          }
+        })
+      }
+    })
+    setOpenConfirm(!openConfirm)
+  }
+
+  const [priceLost, setPriceLost] = useState(null)
+  const getPriceForLost = () => {
+    console.log(dataBorrow.transactions)
+    for(var transaction of dataBorrow.transactions) {
+      console.log(transaction)
+
+      for(var detail of transaction.transactionBooks) {
+        console.log(detail)
+        if(detail.id === selectedId) {
+          setPriceLost(currencyFormat(detail.book.price * 2))
+          return
+        }
+      }
+    }
+    setPriceLost(null)
   }
 
   return (
@@ -238,7 +293,7 @@ const History = () => {
             {dataBorrow.transactions.map((record) => (
               <>
                 {record?.transactionBooks.map((detail, index) => (
-                  <tr key={detail.id} className="">
+                  <tr key={detail.id} className="" onClick={() => setSelectedId(detail.id)}>
                     {index === 0 && 
                       <td className="p-2 border border-blue-gray-100" rowSpan={record.transactionBooks.length}>
                         <p>{formatDate(record.borrowedDate)}</p>
@@ -260,21 +315,28 @@ const History = () => {
                       <p>{detail.renewalCount}</p>
                     </td>
                     <td className="p-2 border border-blue-gray-100">
-                      <div className='w-fit mx-auto'>
-                        <Button 
-                          variant="outlined" 
-                          className='p-2 text-xs normal-case font-normal mr-2'
-                          onClick={() => setOpenConfirm(!openConfirm)}
-                        >
-                          Renew
-                        </Button>
+                      <div className='w-fit'>
+                        {detail.returnDate === null && 
+                        <>
+                          <Button 
+                            variant="outlined"
+                            className='p-2 text-xs normal-case font-normal mr-2'
+                            onClick={() => setOpenConfirm(!openConfirm)}
+                          >
+                            Renew
+                          </Button>
                         <Button 
                           variant="outlined" 
                           className='p-2 text-xs normal-case font-normal'
-                          onClick={() => setOpenReport(!openReport)}
+                          onClick={() => {
+                            setOpenReport(!openReport)
+                            getPriceForLost()
+                          }}
                         >
                           Report lost book
                         </Button>
+                      </>
+                      }
                       </div>
                     </td>
                     {index === 0 && 
@@ -357,7 +419,7 @@ const History = () => {
             </thead>
             <tbody>
               {dataRenew.renewals.map((record) => (
-                <tr key={record.id} className="even:bg-blue-gray-50/50 hover:bg-lightOrange/30">
+                <tr key={record.id} className="even:bg-blue-gray-50/50">
                   <td className="p-2">
                     <p>{record.transactionBook?.book?.isbn}</p>
                   </td>
@@ -492,6 +554,7 @@ const History = () => {
         title="Sure you want to renew?"
         content="Are you sure you want to renew this book?"
         icon={<BiRefresh size='2rem' />}
+        onClick={handleRenew}
       >
       </DialogConfirm>
 
@@ -499,8 +562,9 @@ const History = () => {
         open={openReport}
         handleOpen={() => setOpenReport(!openReport)}
         title="You have lost this book?"
-        content={<span>You will be fined <span className='text-red'>{123000}</span> VND for losing it.</span>}
+        content={<span>You will be fined <span className='text-red'>{priceLost}</span> VND for losing it.</span>}
         icon={<BiMessageAltError size='2rem' />}
+        haveButtons={false}
       >
       </DialogConfirm>
     </div>
