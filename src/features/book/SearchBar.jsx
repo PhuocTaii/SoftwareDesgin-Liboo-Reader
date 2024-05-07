@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { BiSearch, BiChevronDown } from 'react-icons/bi'
 import {
   Input,
@@ -8,65 +8,33 @@ import {
   MenuItem,
   Button,
 } from '@material-tailwind/react'
-import { Link } from 'react-router-dom'
-import { getBookByName, searchBookByIsbn } from './bookApi'
-import { debounce } from 'lodash'
-import { useCallback } from 'react'
+import {debounce} from 'lodash'
 
-const SearchBar = ({ className }) => {
-  const filters = ['ISBN', 'name']
+const SearchBar = ({filters, selectedFilter, setSelectedFilter, onSearch, className}) => {
 
-  const [selectedFilter, setSelectedFilter] = useState(0)
   const [openMenu, setOpenMenu] = useState(false)
 
-  const [bookList, setBookList] = useState([]);
-  const [open, setOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  function searchBook(searchTerm, selectedFilter) {
-    if(selectedFilter === 0)
-      searchBookByIsbn(searchTerm).then(res => {
-        setBookList(res)}
-      )
-    else
-      getBookByName(searchTerm).then(res => {
-        setBookList(res)}
-      );
-  }
+  const [searchTerm, setSearchTerm] = useState('')
 
   const debounceSearch = useCallback(
     debounce((searchTerm, selectedFilter) => {
-      searchBook(searchTerm, selectedFilter)
-      setOpen(true)
+      onSearch(searchTerm, selectedFilter)
     }, 500), // Debounce the searchBook function
     []
   );
 
-  const handleSearchBook = (e) => {
-    const searchTerm = e.target.value;
+  const handleSearch = () => {
+    // const searchTerm = e.target.value;
 
-    if (searchTerm === '') {
-      setBookList([]);
-      setOpen(false);
-      return;
-    } else {
-      debounceSearch(searchTerm, selectedFilter);
-    }
+    // if (searchTerm === '') {
+    //   return;
+    // }
+    debounceSearch(searchTerm, selectedFilter);
   }
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+    handleSearch()
+  }, [searchTerm, selectedFilter])
 
   return (
     <div className={`flex w-full sm:w-[23rem] ${className}`}>
@@ -91,8 +59,7 @@ const SearchBar = ({ className }) => {
                 key={index}
                 value={item}
                 className="flex items-center gap-2"
-                onClick={() =>
-                  setSelectedFilter(index)}>
+                onClick={() => setSelectedFilter(index)}>
                 <p className="capitalize">{item}</p>
               </MenuItem>
             )
@@ -107,32 +74,11 @@ const SearchBar = ({ className }) => {
           labelProps={{
             className: 'before:content-none after:content-none',
           }}
-          onChange={handleSearchBook}
+          onChange={(e) => {
+            setSearchTerm(e.target.value)
+          }}
           icon={<BiSearch size="1.2rem" />}
         />
-        {open &&
-          <div ref={menuRef} className='z-50 w-full h-fit absolute top-12 space-y-2 bg-white border-blue-gray-200 border-[1.2px] rounded-md px-1.5 py-2 overflow-auto'>
-          {
-            bookList.length !== 0 ?
-            bookList.map((item) => (
-              <Link key={item.isbn} to={`/catalog/${item.isbn}`}>
-                <div key={item.id} className='space-y-2'>
-                  <div className='flex gap-2 w-full h-fit cursor-pointer'>
-                    <img src={item.image.secureUrl} alt='book' className='w-10 h-10 object-cover' />
-                    <div>
-                      <p>{item.name}</p>
-                      <p>{item.isbn}</p>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </Link>
-            ))
-            :
-            <p className='font-medium'>No book found</p>
-          }
-          </div>
-        }
       </div>
     </div>
   )

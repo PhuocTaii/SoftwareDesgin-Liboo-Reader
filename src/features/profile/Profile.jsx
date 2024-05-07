@@ -18,7 +18,7 @@ const Profile = () => {
   console.log(curUser)
 
   useEffect(() => {
-    getCurrentUser(curUser.refresh_token, curUser.user.id, dispatch);
+    getCurrentUser(curUser.user.id, dispatch);
   }, [])
 
   const [account, setAccount] = useState({
@@ -33,7 +33,7 @@ const Profile = () => {
     makingDay: curUser.user.joinedDate,
     invalidDay: curUser.user.expiredDate,
     phone: curUser.user.phone,
-    membership: curUser.user.membership.type,
+    membership: curUser.user.membership,
   });
 
   useEffect(() => {
@@ -49,17 +49,13 @@ const Profile = () => {
       makingDay: curUser.user.joinedDate,
       invalidDay: curUser.user.expiredDate,
       phone: curUser.user.phone,
-      membership: curUser.user.membership.type,
+      membership: curUser.user.membership,
     })
+    curUser.user.gender ?
+      document.getElementById("update-gender-male").checked = true :
+      document.getElementById("update-gender-female").checked = true
+
   }, [curUser])
-
-  // useEffect(() => {
-  //   setAccount({
-  //     ...account,
-  //     image: curUser.user.image,
-  //   })
-  // }, [curUser.user.image])
-
 
   const handleChangeInfo = (e) => {
     e.preventDefault();
@@ -72,13 +68,13 @@ const Profile = () => {
     console.log(e.target.files[0].name)
     var formData = new FormData();
     formData.append('image', e.target.files[0]);
-    updateImage(dispatch, account?.id, curUser?.refresh_token, formData);
+    updateImage(dispatch, account?.id, formData);
   }
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
     account.gender = document.getElementById("update-profile")['gender'].value === 'male'
-    updateProfile(dispatch, account?.id, curUser.refresh_token, account);
+    updateProfile(dispatch, account?.id, account);
   }
 
   return (
@@ -165,11 +161,13 @@ const Profile = () => {
               value={true}
               name='gender'
               defaultChecked={true}
+              id="update-gender-male"
             />
             <RadioButton 
               label="Female"
               value={false}
               name='gender'
+              id="update-gender-female"
             />
           </div>
           <Input
@@ -177,7 +175,7 @@ const Profile = () => {
             label="Membership"
             required
             type="membership"
-            value={account.membership}
+            value={account.membership.type}
             name="membership"
             readOnly
           />

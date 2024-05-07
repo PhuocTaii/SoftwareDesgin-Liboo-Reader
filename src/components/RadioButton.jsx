@@ -1,9 +1,10 @@
 import React from "react";
 import { Radio } from "@material-tailwind/react";
 
-const RadioButton = ({label, value, name, checked, defaultChecked, onChange}) => {
+const RadioButton = ({id, label, value, name, checked, defaultChecked, onChange}) => {
   return (
     <Radio
+        id={id}
         icon={<div className="w-2 h-2 rounded-full bg-red"></div>}
         label={label}
         value={value}
