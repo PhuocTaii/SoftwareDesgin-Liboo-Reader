@@ -68,6 +68,7 @@ const SignUp = () => {
           onChange={handleChangeInfo}
           onInput={(e) => e.target.value = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')}
           pattern=".{12}"
+          maxLength={12}
           name='identifier'
           value={account.identifier}
         />

@@ -1,7 +1,6 @@
 // call API here
-import { instance } from "../../config/axiosConfig";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { instance } from "../../config/axiosConfig";
 
 export const getBorrows = async (page, filterIdx, dateFrom, dateTo) => {
   const filterOption = () => {
@@ -53,20 +52,20 @@ export const getRenews = async (page, filterIdx, dateFrom, dateTo) => {
 }
 
 export const getReservations = async (page, filterIdx, dateFrom, dateTo) => {
-  const filterOption = () => {
-    switch(filterIdx){
-    case 1:
-      return "reserve-date"
-    case 2:
-      return "pickup-date"
-    default:
-      {
-        dateFrom = ""
-        dateTo = ""
-        return ""
-      }
+    const filterOption = () => {
+      switch(filterIdx){
+      case 1:
+        return "reserve-date"
+      case 2:
+        return "pickup-date"
+      default:
+        {
+          dateFrom = ""
+          dateTo = ""
+          return ""
+        }
+    }
   }
-}
 
   if(filterOption() !== "" && (dateFrom === "" || dateTo === ""))
     return null
@@ -91,6 +90,27 @@ export const requestRenew = async (transactionId) => {
   } catch (err){
     console.log(err.response);
     toast.error(err.response.data);
+    return null
+  }
+}
+
+export const reserveBook = async (reservation) => {
+  try{
+    const res = await instance.post(`/user/add-reservation`, reservation);
+    toast.success(res.data.message);
+    return res.data
+  } catch (err){
+    toast.error(err.response.data);
+    return null
+  }
+}
+
+export const getNotPickUpBooks = async () => {
+  try{
+    const res = await instance.get(`/user/not-picked-up-reservations`);
+    return res.data;
+  } catch (err){
+    console.log(err.response);
     return null
   }
 }
