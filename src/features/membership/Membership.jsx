@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 
 
-
 // const memberships = [
 //   {
 //     id: 1,
@@ -49,7 +48,7 @@ import { useDispatch, useSelector } from 'react-redux'
 const Membership = () => {
   const [memberships, setMemberships] = useState([]);
   const curUser = useSelector((state) => state.auth.currentUser.user);
-
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getAllMemberships().then((data) => {
@@ -63,7 +62,7 @@ const Membership = () => {
 
   const handleOrder = (membership) => {
     console.log(membership)
-    membershipPayment(membership, curUser).then((data) => {
+    membershipPayment(membership, curUser, dispatch).then((data) => {
       window.location.href = data
     })
   };
@@ -97,7 +96,11 @@ const Membership = () => {
                 </List>
               </CardBody>
               <CardFooter className="pt-0 w-full flex justify-center">
-                <CustomButton onClick={() => handleOrder(membership)} label={"Start now"} classes={"w-fit"} />
+                {
+                  membership.type !== "Student" ?
+                  <CustomButton onClick={() => handleOrder(membership)} label={"Start now"} classes={"w-fit"} /> : 
+                  <CustomButton label={"Register at library"} classes={"w-fit"} />
+                }
               </CardFooter>
             </Card>
           ))}

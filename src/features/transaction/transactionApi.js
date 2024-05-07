@@ -1,8 +1,6 @@
 // call API here
 import { toast } from "react-toastify";
 import { instance } from "../../config/axiosConfig";
-import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 
 export const getBorrows = async (page, filterIdx, dateFrom, dateTo) => {
   const filterOption = () => {
