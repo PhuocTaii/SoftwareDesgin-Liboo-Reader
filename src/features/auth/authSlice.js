@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { getCurrentUser } from '../profile/profileApi'
 
 const initialState = {
     currentUser: null,
@@ -19,6 +20,11 @@ const initialState = {
     },
 
     update: {
+        isFetching: false,
+        error: false
+    },
+
+    getCurrentUser: {
         isFetching: false,
         error: false
     }
@@ -90,6 +96,22 @@ const authSlice = createSlice({
         updateFailure: (state) => {
             state.update.isFetching = false
             state.update.error = true
+        },
+
+        //GetCurrentUser
+        getCurrentUserBegin: (state) => {
+            state.getCurrentUser.isFetching = true
+        },
+
+        getCurrentUserSuccess: (state, action) => {
+            state.getCurrentUser.isFetching = false
+            state.currentUser.user = action.payload
+            state.getCurrentUser.error = false
+        },
+
+        getCurrentUserFailure: (state) => {
+            state.getCurrentUser.isFetching = false
+            state.getCurrentUser.error = true
         }
     }
 })

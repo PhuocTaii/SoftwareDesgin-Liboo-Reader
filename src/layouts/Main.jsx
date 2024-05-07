@@ -14,7 +14,7 @@ const MainLayout = () => {
       <div
         className={`w-full ${toggle ? 'ml-[12.875rem] w-[calc(100%-12.875rem)]' : ''}`}>
         <Header />
-        <div className="mt-14 px-9 pt-2">
+        <div className="mt-14 px-9 pt-2 pb-8">
           <Outlet />
         </div>
       </div>

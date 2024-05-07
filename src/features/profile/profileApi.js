@@ -28,9 +28,7 @@ export const updateProfile = async (dispatch, id, token, user) => {
 
 export const updateImage = async (dispatch, id, token, formData) => {
     dispatch(slice.updateBegin())
-    try{
-
-        
+    try{ 
         const res = await axios.put(`${url + 'add-user-image/' + id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -45,3 +43,18 @@ export const updateImage = async (dispatch, id, token, formData) => {
         toast.error('Update failed!');
     }
 } 
+
+export const getCurrentUser = async (token, id, dispatch) => {
+    dispatch(slice.getCurrentUserBegin())
+    try{
+        const res = await axios.get(`${url + 'user/' + id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        dispatch(slice.getCurrentUserSuccess(res.data))
+    } catch (err){
+        console.log(err.response);
+        dispatch(slice.getCurrentUserFailure());
+    }
+}

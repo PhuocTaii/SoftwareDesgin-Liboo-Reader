@@ -7,13 +7,19 @@ import RadioButton from "../../components/RadioButton";
 import CustomButton from "../../components/CustomButton";
 import {formatDate} from '../../helpers/dateFormat'
 import { useSelector, useDispatch } from 'react-redux'
-import { updateProfile, updateImage } from './profileApi'
+import { updateProfile, updateImage, getCurrentUser } from './profileApi'
 
 
 // Profile page
 const Profile = () => {
   const curUser = useSelector((state) => state.auth.currentUser);
+  // const token = useSelector((state) => state.auth.refresh_token);
   const dispatch = useDispatch();
+  console.log(curUser)
+
+  useEffect(() => {
+    getCurrentUser(curUser.refresh_token, curUser.user.id, dispatch);
+  }, [])
 
   const [account, setAccount] = useState({
     id: curUser.user.id,
@@ -27,14 +33,32 @@ const Profile = () => {
     makingDay: curUser.user.joinedDate,
     invalidDay: curUser.user.expiredDate,
     phone: curUser.user.phone,
+    membership: curUser.user.membership.type,
   });
 
   useEffect(() => {
     setAccount({
-      ...account,
+      id: curUser.user.id,
       image: curUser.user.image,
+      name: curUser.user.name,
+      identifier: curUser.user.identifier,
+      birthday: curUser.user.birthDate,
+      gender: curUser.user.gender,
+      email: curUser.user.email,
+      address: curUser.user.address,
+      makingDay: curUser.user.joinedDate,
+      invalidDay: curUser.user.expiredDate,
+      phone: curUser.user.phone,
+      membership: curUser.user.membership.type,
     })
-  }, [curUser.user.image])
+  }, [curUser])
+
+  // useEffect(() => {
+  //   setAccount({
+  //     ...account,
+  //     image: curUser.user.image,
+  //   })
+  // }, [curUser.user.image])
 
 
   const handleChangeInfo = (e) => {
@@ -84,7 +108,6 @@ const Profile = () => {
             label="Email"
             required
             type="email"
-            onChange={handleChangeInfo}
             value={account.email}
             name="email"
             readOnly
@@ -108,7 +131,6 @@ const Profile = () => {
             }
             pattern=".{12}"
             maxLength={12}
-            onChange={handleChangeInfo}
             name="identifer"
             value={account.identifier}
           />
@@ -137,6 +159,28 @@ const Profile = () => {
             value={account.address}
             name="address"
           />
+          <div className="flex gap-4">
+            <RadioButton 
+              label="Male" 
+              value={true}
+              name='gender'
+              defaultChecked={true}
+            />
+            <RadioButton 
+              label="Female"
+              value={false}
+              name='gender'
+            />
+          </div>
+          <Input
+            variant="standard"
+            label="Membership"
+            required
+            type="membership"
+            value={account.membership}
+            name="membership"
+            readOnly
+          />
           <Input
             variant="standard"
             label="Registration date"
@@ -153,19 +197,6 @@ const Profile = () => {
             name="invalidDay"
             labelProps={{ className: "peer-disabled:text-textDisable" }}
           />
-          <div className="flex gap-4">
-            <RadioButton 
-              label="Male" 
-              value={true}
-              name='gender'
-              defaultChecked={true}
-            />
-            <RadioButton 
-              label="Female"
-              value={false}
-              name='gender'
-            />
-          </div>
         </div>
         <div className="flex justify-center pt-3">
           <CustomButton label="Save changes" type="submit" />
