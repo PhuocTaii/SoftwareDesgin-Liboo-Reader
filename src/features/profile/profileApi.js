@@ -1,20 +1,18 @@
-import axios from "axios";
+// import axios from "axios";
+import { instance } from "../../config/axiosConfig";
 import {slice} from "../auth/authSlice";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const url = "http://localhost:8080/api/"
-
-export const updateProfile = async (dispatch, id, token, user) => {
+export const updateProfile = async (dispatch, id, user) => {
     dispatch(slice.updateBegin())
     try{
-        const res = await axios.put(`${url + 'modify-user/' + id}`, {
+        const res = await instance.put(`/modify-user/${id}`, {
             ...user,
             birthDate: user.birthday,
         }, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
             }
         })
         dispatch(slice.updateSuccess(res.data))
@@ -26,13 +24,12 @@ export const updateProfile = async (dispatch, id, token, user) => {
     }
 }
 
-export const updateImage = async (dispatch, id, token, formData) => {
+export const updateImage = async (dispatch, id, formData) => {
     dispatch(slice.updateBegin())
     try{ 
-        const res = await axios.put(`${url + 'add-user-image/' + id}`, formData, {
+        const res = await instance.put(`/add-user-image/${id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`
             }
         })
         dispatch(slice.updateSuccess(res.data))
@@ -44,14 +41,10 @@ export const updateImage = async (dispatch, id, token, formData) => {
     }
 } 
 
-export const getCurrentUser = async (token, id, dispatch) => {
+export const getCurrentUser = async (id, dispatch) => {
     dispatch(slice.getCurrentUserBegin())
     try{
-        const res = await axios.get(`${url + 'user/' + id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        const res = await instance.get(`/user/${id}`)
         dispatch(slice.getCurrentUserSuccess(res.data))
     } catch (err){
         console.log(err.response);

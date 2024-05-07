@@ -74,8 +74,6 @@ const Catalog = () => {
               <div className='relative'>
                 <img src={item.image.secureUrl} alt='book' className='peer h-60 object-cover' />
                 <p className='hidden peer-hover:block peer-hover:absolute peer-hover:top-0 peer-hover:right-0 peer-hover:bg-red peer-hover:text-white peer-hover:px-2 peer-hover:py-1'>{item.isbn}</p>
-                <img src={item.image.secureUrl} alt='book' className='peer h-60 object-cover' />
-                <p className='hidden peer-hover:block peer-hover:absolute peer-hover:top-0 peer-hover:right-0 peer-hover:bg-red peer-hover:text-white peer-hover:px-2 peer-hover:py-1'>{item.isbn}</p>
               </div>
               <p className='text-center text-sm'>{item.name}</p>
             </div>
