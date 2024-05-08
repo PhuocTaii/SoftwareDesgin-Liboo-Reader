@@ -19,7 +19,7 @@ const SearchBar = ({filters, selectedFilter, setSelectedFilter, onSearch, classN
   const debounceSearch = useCallback(
     debounce((searchTerm, selectedFilter) => {
       onSearch(searchTerm, selectedFilter)
-    }, 500), // Debounce the searchBook function
+    }, 100), // Debounce the searchBook function
     []
   );
 

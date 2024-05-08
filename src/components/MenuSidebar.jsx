@@ -18,7 +18,7 @@ const items = [
   },
   {
     icon: <GoArrowRight color="white" size="1.5rem" />,
-    text: 'Borrow/Renew',
+    text: 'Reserve',
     path: '/transaction',
   },
   {

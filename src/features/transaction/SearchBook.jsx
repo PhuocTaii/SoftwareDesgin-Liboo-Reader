@@ -19,7 +19,7 @@ const SearchBook = ({onClick, bookName, setBookName}) => {
     debounce((searchTerm) => {
       searchBook(searchTerm)
       setOpen(true)
-    }, 500), // Debounce the searchBook function
+    }, 100), // Debounce the searchBook function
     []
   );
 
@@ -65,7 +65,7 @@ const SearchBook = ({onClick, bookName, setBookName}) => {
           {bookList.map((item) => (
             <div key={item.id} className='space-y-2'>
               <div className='flex gap-2 w-full h-fit cursor-pointer' onClick={() => onClick(item)}>
-                <img src={item.image.secureUrl} alt='book' className='w-10 h-10 object-cover' />
+                <img src={item.image?.secureUrl} alt='book' className='w-10 h-10 object-cover' />
                 <div>
                   <p>{item.name}</p>
                   <p>{item.isbn}</p>
