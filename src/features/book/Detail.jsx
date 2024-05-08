@@ -33,7 +33,7 @@ const Detail = () => {
       <div className='w-full h-full space-y-3 py-2 pr-4 pl-3'>
       {currentBook &&
       <div className='w-full flex gap-4 h-fit'>
-        <img src={currentBook.image.secureUrl} alt="book" className='w-40 h-auto object-contain place-self-start shrink-0' />
+        <img src={currentBook.image?.secureUrl} alt="book" className='w-40 h-auto object-contain place-self-start shrink-0' />
         
         {/* Detail */}
         <div className='w-full space-y-2'>
