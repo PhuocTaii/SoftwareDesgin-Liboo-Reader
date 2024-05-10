@@ -51,8 +51,6 @@ const MenuItem = ({ icon, text, active, onClick }) => {
 
 const MenuSidebar = () => {
   const { toggle, selectedItem } = useSelector((state) => state.menu)
-  const token = useSelector((state) => state.auth.currentUser.refresh_token);
-
   const dispatch = useDispatch()
 
   const handleToggleMenu = (e) => {
@@ -61,7 +59,7 @@ const MenuSidebar = () => {
   }
 
   const logoutHandle = () => {
-    logout(dispatch, token);
+    logout(dispatch);
     dispatch(setToggle());
     dispatch(setSelectedItem(-1));
   }

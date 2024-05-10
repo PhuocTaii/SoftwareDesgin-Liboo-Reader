@@ -33,7 +33,7 @@ export const login = async (user, dispatch, navigate) => {
         })
         window.localStorage.setItem('access_token', res.data.access_token);
         window.localStorage.setItem('refresh_token', res.data.refresh_token);
-        dispatch(slice.registerSuccess(res.data.user))
+        dispatch(slice.signInSuccess(res.data.user))
         toast.success('Login successfully!');
         navigate('/');
     } catch(err){
@@ -42,7 +42,7 @@ export const login = async (user, dispatch, navigate) => {
     }
 }
 
-export const logout = async (dispatch, token) => {
+export const logout = async (dispatch) => {
     dispatch(slice.logoutBegin());
     try{
         const res = await instance.post('/authentication/logout');
