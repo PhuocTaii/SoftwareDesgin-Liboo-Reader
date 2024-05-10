@@ -18,7 +18,7 @@ import { setSelectedItem } from '../../slices/menu';
 
 const Membership = () => {
   const [memberships, setMemberships] = useState([]);
-  const curUser = useSelector((state) => state.auth.currentUser.user);
+  const curUser = useSelector((state) => state.auth.currentUser);
   const dispatch = useDispatch();
 
   dispatch(setSelectedItem(4))

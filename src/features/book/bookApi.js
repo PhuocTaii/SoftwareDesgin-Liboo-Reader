@@ -20,7 +20,7 @@ export const getBookByName = async (name) => {
   }
 }
 
-export const getBooks = async (page=0, searchBy=-1, query="") => {
+export const getBooks = async (page=0, searchBy=-1, query="", sortBy="") => {
   var searchOption = "";
   if(searchBy === 0)
     searchOption = "isbn";

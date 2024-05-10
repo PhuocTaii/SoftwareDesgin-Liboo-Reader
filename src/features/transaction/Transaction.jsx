@@ -20,7 +20,7 @@ const Transaction = () => {
 
   const location = useLocation();
 
-  const curUser = useSelector((state) => state.auth.currentUser.user);
+  const curUser = useSelector((state) => state.auth.currentUser);
 
   const tempPickupDate = new Date(new Date().getTime() + (24 * 60 * 60 * 1000))
 
