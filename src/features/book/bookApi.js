@@ -27,7 +27,7 @@ export const getBooks = async (page=0, searchBy=-1, query="", sortBy="") => {
   else if(searchBy === 1)
     searchOption = "name";
   try{
-      const res = await instance.get(`/user/books?page=${page}&search-by=${searchOption}&query=${query}@sort-by=${sortBy}`);
+      const res = await instance.get(`user/books?page=${page}&search-by=${searchOption}&query=${query}`);
       return res.data;
   } catch (err){
       console.log(err.response);
