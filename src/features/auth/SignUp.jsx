@@ -52,6 +52,8 @@ const SignUp = () => {
           type="password"
           required
           onChange={handleChangeInfo}
+          minLength={8}
+          maxLength={255}
           name='password' 
           value={account.password}
         />
@@ -92,6 +94,8 @@ const SignUp = () => {
           required
           onChange={handleChangeInfo}
           name='phone' 
+          pattern=".{10}"
+          maxLength={10}
           value={account.phone}
         />
         <div className="flex gap-4">

@@ -1,5 +1,7 @@
 import axios from 'axios'
 import {store} from '../store'
+import { jwtDecode } from 'jwt-decode' 
+import { useSelector } from 'react-redux';
 
 store.subscribe(listener)
 
@@ -20,41 +22,35 @@ const instance = axios.create({
 })
 
 // Add a response interceptor
-instance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+instance.interceptors.response.use((response) => response, async (error) => {
+  const originalRequest = error.config;
 
-    // If the error status is 401 and there is no originalRequest._retry flag,
-    // it means the token has expired and we need to refresh it
-    if (error.response.status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true;
+  if (error.response.status === 403 && !originalRequest._retry) {
+  originalRequest._retry = true;
+    try {
+      console.log('Refreshing token')
+      const refreshToken = window.localStorage.getItem('refresh_token');
+      console.log(refreshToken)
+      const response = await axios.post('/authentication/refresh-token', {}, { 
+        headers:
+        {
+          "Authorization": "Bearer " + refreshToken,
+        }
+      });
+      const token  = response.data;
 
-      try {
-        console.log('Refreshing token')
-        const refreshToken = window.localStorage.getItem('refresh_token');
-        console.log(refreshToken)
-        const response = await axios.post('/authentication/refresh-token', {}, { 
-          headers:
-          {
-            "Authorization": "Bearer " + refreshToken,
-          }
-        });
-        const token  = response.data;
+      window.localStorage.setItem('access_token', token.access_token);
+      window.localStorage.setItem('refresh_token', token.refresh_token);
 
-        window.localStorage.setItem('access_token', token.access_token);
-        window.localStorage.setItem('refresh_token', token.refresh_token);
-
-        // Retry the original request with the new token
-        originalRequest.headers.Authorization = `Bearer ${token.access_token}`;
-        return axios(originalRequest);
-      } catch (error) {
-        window.location.href = '/login';
-      }
+      // Retry the original request with the new token
+      originalRequest.headers.Authorization = `Bearer ${token.access_token}`;
+      return axios(originalRequest);
+    } catch (error) {
+      window.location.href = '/login';
     }
-    return Promise.reject(error);
   }
-);
+  return Promise.reject(error);
+});
 
 function listener() {
   let token = select(store.getState())
