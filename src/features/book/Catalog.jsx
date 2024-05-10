@@ -79,7 +79,7 @@ const Catalog = () => {
           setSelectedFilter={setSelectedFilter}
         />
       <h1 className='text-2xl font-semibold'>CATALOG</h1>
-      <div className='grid grid-cols-6 gap-x-10 gap-y-4 max-w-fit'>
+      <div className='grid grid-cols-5 gap-x-10 gap-y-4 max-w-fit'>
         {data.books.map((item) => (
           <Link key={item.isbn} to={`/catalog/${item.isbn}`}>
             <div className='flex flex-col items-center gap-2'>
