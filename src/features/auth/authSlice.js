@@ -89,7 +89,7 @@ const authSlice = createSlice({
 
         updateSuccess: (state, action) => {
             state.update.isFetching = false
-            state.currentUser.user = action.payload
+            state.currentUser = action.payload
             state.update.error = false
         },
 
@@ -105,7 +105,7 @@ const authSlice = createSlice({
 
         getCurrentUserSuccess: (state, action) => {
             state.getCurrentUser.isFetching = false
-            state.currentUser.user = action.payload
+            state.currentUser = action.payload
             state.getCurrentUser.error = false
         },
 

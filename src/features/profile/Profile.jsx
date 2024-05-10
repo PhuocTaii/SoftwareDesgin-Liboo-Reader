@@ -13,45 +13,43 @@ import { updateProfile, updateImage, getCurrentUser } from './profileApi'
 // Profile page
 const Profile = () => {
   const curUser = useSelector((state) => state.auth.currentUser);
-  // const token = useSelector((state) => state.auth.refresh_token);
   const dispatch = useDispatch();
-  console.log(curUser)
 
   useEffect(() => {
-    getCurrentUser(curUser.user.id, dispatch);
+    getCurrentUser(curUser.id, dispatch);
   }, [])
 
   const [account, setAccount] = useState({
-    id: curUser.user.id,
-    image: curUser.user.image,
-    name: curUser.user.name,
-    identifier: curUser.user.identifier,
-    birthday: curUser.user.birthDate,
-    gender: curUser.user.gender,
-    email: curUser.user.email,
-    address: curUser.user.address,
-    makingDay: curUser.user.joinedDate,
-    invalidDay: curUser.user.expiredDate,
-    phone: curUser.user.phone,
-    membership: curUser.user.membership,
+    id: curUser.id,
+    image: curUser.image,
+    name: curUser.name,
+    identifier: curUser.identifier,
+    birthday: curUser.birthDate,
+    gender: curUser.gender,
+    email: curUser.email,
+    address: curUser.address,
+    makingDay: curUser.joinedDate,
+    invalidDay: curUser.expiredDate,
+    phone: curUser.phone,
+    membership: curUser.membership,
   });
 
   useEffect(() => {
     setAccount({
-      id: curUser.user.id,
-      image: curUser.user.image,
-      name: curUser.user.name,
-      identifier: curUser.user.identifier,
-      birthday: curUser.user.birthDate,
-      gender: curUser.user.gender,
-      email: curUser.user.email,
-      address: curUser.user.address,
-      makingDay: curUser.user.joinedDate,
-      invalidDay: curUser.user.expiredDate,
-      phone: curUser.user.phone,
-      membership: curUser.user.membership,
+      id: curUser.id,
+      image: curUser.image,
+      name: curUser.name,
+      identifier: curUser.identifier,
+      birthday: curUser.birthDate,
+      gender: curUser.gender,
+      email: curUser.email,
+      address: curUser.address,
+      makingDay: curUser.joinedDate,
+      invalidDay: curUser.expiredDate,
+      phone: curUser.phone,
+      membership: curUser.membership,
     })
-    curUser.user.gender ?
+    curUser.gender ?
       document.getElementById("update-gender-male").checked = true :
       document.getElementById("update-gender-female").checked = true
 
@@ -73,7 +71,7 @@ const Profile = () => {
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
-    account.gender = document.getElementById("update-profile")['gender'].value === 'male'
+    account.gender = document.getElementById("update-profile")['gender'].value
     updateProfile(dispatch, account?.id, account);
   }
 

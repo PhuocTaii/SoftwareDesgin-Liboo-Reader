@@ -9,8 +9,8 @@ import { PiBookLight } from "react-icons/pi";
 
 const PlaceholderCover = () => {
   return (
-    <div className='h-60 bg-gray-200 flex items-center'>
-      <PiBookLight className="text-9xl text-gray-400" />
+    <div className='w-full h-60 bg-gray-200 flex items-center'>
+      <PiBookLight className="w-full text-9xl text-gray-400" />
     </div>
   )
 }
@@ -78,7 +78,7 @@ const Catalog = () => {
         {data.books.map((item) => (
           <Link key={item.isbn} to={`/catalog/${item.isbn}`}>
             <div className='flex flex-col items-center gap-2'>
-              <div className='relative'>
+              <div className='relative w-full'>
                 { 
                   item.image === null ? 
                   <PlaceholderCover /> : 

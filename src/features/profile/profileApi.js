@@ -15,6 +15,7 @@ export const updateProfile = async (dispatch, id, user) => {
                 'Content-Type': 'application/json',
             }
         })
+        console.log(res.data)
         dispatch(slice.updateSuccess(res.data))
         toast.success('Update successfully!');
     } catch(err){
@@ -32,6 +33,7 @@ export const updateImage = async (dispatch, id, formData) => {
                 'Content-Type': 'multipart/form-data',
             }
         })
+        console.log(res.data)
         dispatch(slice.updateSuccess(res.data))
         toast.success('Update successfully!');
     } catch(err){
@@ -45,6 +47,7 @@ export const getCurrentUser = async (id, dispatch) => {
     dispatch(slice.getCurrentUserBegin())
     try{
         const res = await instance.get(`/user/${id}`)
+        console.log(res.data)
         dispatch(slice.getCurrentUserSuccess(res.data))
     } catch (err){
         console.log(err.response);

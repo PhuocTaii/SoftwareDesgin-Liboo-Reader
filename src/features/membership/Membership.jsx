@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const Membership = () => {
   const [memberships, setMemberships] = useState([]);
-  const curUser = useSelector((state) => state.auth.currentUser.user);
+  const curUser = useSelector((state) => state.auth.currentUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
