@@ -5,14 +5,25 @@ import SearchBar from './SearchBar'
 import { getBooks } from './bookApi'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { PiBookLight } from "react-icons/pi";
+
+const PlaceholderCover = () => {
+  return (
+    <div className='h-60 bg-gray-200 flex items-center'>
+      <PiBookLight className="text-9xl text-gray-400" />
+    </div>
+  )
+}
 
 // Catalog page
 const Catalog = () => {
-  const [data, setData] = useState({
+  const emptyData = {
     books: [],
     totalPages: 0,
     pageNumber: 0
-  })
+  }
+
+  const [data, setData] = useState(emptyData)
 
   // ------------------- HANDLE PAGING -------------------
   useEffect(() => {
@@ -22,11 +33,7 @@ const Catalog = () => {
       }
       else {
         toast.error("Failed to load data. Please try again later.")
-        setData({
-          books: [],
-          totalPages: 0,
-          pageNumber: 0
-        })
+        setData(emptyData)
       }
     })
   }, [data.pageNumber])
@@ -72,7 +79,11 @@ const Catalog = () => {
           <Link key={item.isbn} to={`/catalog/${item.isbn}`}>
             <div className='flex flex-col items-center gap-2'>
               <div className='relative'>
-                <img src={item.image?.secureUrl} alt='book' className='peer h-60 object-cover' />
+                { 
+                  item.image === null ? 
+                  <PlaceholderCover /> : 
+                  <img src={item.image?.secureUrl} alt='book' className='peer h-60 object-cover' />
+                }
                 <p className='hidden peer-hover:block peer-hover:absolute peer-hover:top-0 peer-hover:right-0 peer-hover:bg-red peer-hover:text-white peer-hover:px-2 peer-hover:py-1'>{item.isbn}</p>
               </div>
               <p className='text-center text-sm'>{item.name}</p>

@@ -15,36 +15,6 @@ import React, {useEffect, useState} from 'react'
 import {membershipPayment} from './membershipApi';
 import { useDispatch, useSelector } from 'react-redux'
 
-
-
-
-// const memberships = [
-//   {
-//     id: 1,
-//     type: "Regular",
-//     membershipFee: 50000,
-//     maxBooksAllowed: 3,
-//     maxRenewalsAllowed: 2,
-//     reservedBooksAllowed: 2,
-//   },
-//   {
-//     id: 2,
-//     type: "Premium",
-//     membershipFee: 75000,
-//     maxBooksAllowed: 5,
-//     maxRenewalsAllowed: 3,
-//     reservedBooksAllowed: 3,
-//   },
-//   {
-//     id: 3,
-//     type: "Student",
-//     membershipFee: 30000,
-//     maxBooksAllowed: 4,
-//     maxRenewalsAllowed: 2,
-//     reservedBooksAllowed: 1,
-//   }
-// ]
-
 const Membership = () => {
   const [memberships, setMemberships] = useState([]);
   const curUser = useSelector((state) => state.auth.currentUser.user);
@@ -58,15 +28,12 @@ const Membership = () => {
     })
   }, [])
 
-
-
   const handleOrder = (membership) => {
     console.log(membership)
     membershipPayment(membership, curUser, dispatch).then((data) => {
       window.location.href = data
     })
   };
-
   
   return (
     <div className="flex w-full h-full flex-col gap-4">
@@ -98,8 +65,16 @@ const Membership = () => {
               <CardFooter className="pt-0 w-full flex justify-center">
                 {
                   membership.type !== "Student" ?
-                  <CustomButton onClick={() => handleOrder(membership)} label={"Start now"} classes={"w-fit"} /> : 
-                  <CustomButton label={"Register at library"} classes={"w-fit"} />
+                  <CustomButton 
+                    onClick={() => handleOrder(membership)} 
+                    label={curUser.membership.type === membership.type ? "Renew" : "Start now"} 
+                    classes={"w-fit"}
+                  /> : 
+                  <CustomButton 
+                    label={"Register at library"} 
+                    classes={"w-fit"} 
+                    disabled={true} 
+                  />
                 }
               </CardFooter>
             </Card>
