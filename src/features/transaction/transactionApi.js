@@ -25,6 +25,7 @@ export const getBorrows = async (page, filterIdx, dateFrom, dateTo) => {
 
   try{
     const res = await instance.get(`/user/transactions?page=${page}&filter-by=${filterOption()}&from=${dateFrom}&to=${dateTo}`);
+    console.log(res.data)
     return res.data;
   } catch (err){
     console.log(err.response);
@@ -41,7 +42,6 @@ export const getRenews = async (page, filterIdx, dateFrom, dateTo) => {
     dateTo = ""
   }
 
-  console.log("calling api")
   try{
     const res = await instance.get(`/user/renewals?page=${page}&from=${dateFrom}&to=${dateTo}`);
     return res.data;

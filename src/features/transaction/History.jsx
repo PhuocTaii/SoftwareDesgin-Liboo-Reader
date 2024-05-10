@@ -421,10 +421,10 @@ const History = () => {
               {dataRenew.renewals.map((record) => (
                 <tr key={record.id} className="even:bg-blue-gray-50/50">
                   <td className="p-2">
-                    <p>{record.transactionBook?.book?.isbn}</p>
+                    <p>{record.renewal.transactionBook?.book?.isbn}</p>
                   </td>
                   <td className="p-2">
-                    <p>{record.transactionBook?.book?.name}</p>
+                    <p>{record.renewal.transactionBook?.book?.name}</p>
                   </td>
                   <td className="p-2">
                     <p>{formatDate(record.requestDate)}</p>
