@@ -14,11 +14,14 @@ import {getAllMemberships} from './membershipApi';
 import React, {useEffect, useState} from 'react'
 import {membershipPayment} from './membershipApi';
 import { useDispatch, useSelector } from 'react-redux'
+import { setSelectedItem } from '../../slices/menu';
 
 const Membership = () => {
   const [memberships, setMemberships] = useState([]);
   const curUser = useSelector((state) => state.auth.currentUser.user);
   const dispatch = useDispatch();
+
+  dispatch(setSelectedItem(4))
 
   useEffect(() => {
     getAllMemberships().then((data) => {
