@@ -6,6 +6,8 @@ import { getBooks } from './bookApi'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { PiBookLight } from "react-icons/pi";
+import { useDispatch } from 'react-redux';
+import { setSelectedItem } from '../../slices/menu';
 
 const PlaceholderCover = () => {
   return (
@@ -17,6 +19,9 @@ const PlaceholderCover = () => {
 
 // Catalog page
 const Catalog = () => {
+  const dispatch = useDispatch()
+  dispatch(setSelectedItem(0))
+
   const emptyData = {
     books: [],
     totalPages: 0,

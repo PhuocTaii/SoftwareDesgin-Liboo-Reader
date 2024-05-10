@@ -63,6 +63,7 @@ const MenuSidebar = () => {
   const logoutHandle = () => {
     logout(dispatch, token);
     dispatch(setToggle());
+    dispatch(setSelectedItem(-1));
   }
 
   return (
@@ -83,7 +84,7 @@ const MenuSidebar = () => {
             <Link
               to="/"
               className="flex items-center gap-3 h-fit"
-              onClick={() => dispatch(setSelectedItem(-1))}>
+              >
               <img src={logo} alt="logo" className="w-12 h-12" />
               <p className="text-2xl font-semibold text-lightOrange">LIBOO</p>
             </Link>
@@ -96,7 +97,6 @@ const MenuSidebar = () => {
                       icon={item.icon}
                       text={item.text}
                       active={selectedItem === index}
-                      onClick={() => dispatch(setSelectedItem(index))}
                     />
                   </Link>
                 )
@@ -111,7 +111,10 @@ const MenuSidebar = () => {
               </button>
               <hr className="mr-4" />
               <Link to="/rules">
-                <p className="font-medium text-white pt-2">LIBOO rules</p>
+                <p 
+                  className="font-medium text-white pt-2" 
+                  onClick={() => dispatch(setSelectedItem(-1))}
+                >LIBOO rules</p>
               </Link>
               <div className="flex gap-3">
                 <a
@@ -140,4 +143,5 @@ const MenuSidebar = () => {
   )
 }
 
+export { items }
 export default MenuSidebar

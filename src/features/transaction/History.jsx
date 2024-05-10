@@ -14,6 +14,8 @@ import { BiChevronDown,BiRefresh, BiMessageAltError } from 'react-icons/bi'
 import DialogConfirm from '../../components/DialogConfirm';
 import { getBorrows, getRenews, getReservations, requestRenew } from './transactionApi';
 import {currencyFormat} from '../../helpers/currency'
+import { useDispatch } from 'react-redux';
+import { setSelectedItem } from '../../slices/menu';
 
 const StatusChip = ({status}) => {
   if(status) {
@@ -79,6 +81,9 @@ const TABLE_RENEWAL_HEAD = ['ISBN', 'Book name', 'Renew date'];
 const TABLE_RESERVATION_HEAD = ['Reserve date', 'Pickup date', 'ISBN', 'Book name', 'Status'];
 
 const History = () => {
+  const dispatch = useDispatch();
+  dispatch(setSelectedItem(2))
+
   // BORROW
   const filters = ['None', 'Borrow date', 'Due date', 'Return date']
   const [selectedFilter, setSelectedFilter] = useState(0)
