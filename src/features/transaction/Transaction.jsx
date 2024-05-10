@@ -8,12 +8,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import SearchBook from './SearchBook'
 import {reserveBook, getNotPickUpBooks} from './transactionApi'
 import { toast } from 'react-toastify';
+import { setSelectedItem } from '../../slices/menu';
 
 const EXPIRATION = 30;
 
 const TABLE_HEAD = ['Reserve date' , 'Pickup date', 'ISBN', 'Book name']
 // Transaction page
 const Transaction = () => {
+  const dispatch = useDispatch()
+  dispatch(setSelectedItem(1))
+
   const location = useLocation();
 
   const curUser = useSelector((state) => state.auth.currentUser);

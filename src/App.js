@@ -15,7 +15,6 @@ import Membership from './features/membership/Membership'
 import Rule from './features/rule/Rule'
 import PrivateRoute from './routes/PrivateRoute';
 
-
 const App = () => {
   return (
     <Routes>

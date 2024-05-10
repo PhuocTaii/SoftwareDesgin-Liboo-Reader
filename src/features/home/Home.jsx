@@ -2,8 +2,13 @@ import React from 'react'
 import {BiChevronRight} from 'react-icons/bi'
 import CustomButton from '../../components/CustomButton'
 import {useNavigate} from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setSelectedItem } from '../../slices/menu';
 
 const Home = () => {
+  const dispatch = useDispatch()
+  dispatch(setSelectedItem(-1))
+
   const navigate = useNavigate();
 
   const navigateToCatalog = () => {

@@ -1,5 +1,6 @@
 // call API here
 import axios from "../../config/axiosConfig";
+import { instance } from "../../config/axiosConfig";
 import {slice} from "./authSlice";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -44,10 +45,7 @@ export const login = async (user, dispatch, navigate) => {
 export const logout = async (dispatch, token) => {
     dispatch(slice.logoutBegin());
     try{
-        const res = await axios.post('/authentication/logout', {}, {
-            headers: {
-                'Authorization': `Bearer ${token}`}
-        })
+        const res = await instance.post('/authentication/logout');
         dispatch(slice.logoutSuccess());
         window.localStorage.clear();
         toast.success('Logout successfully!');

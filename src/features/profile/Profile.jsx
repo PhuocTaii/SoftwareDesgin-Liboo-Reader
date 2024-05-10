@@ -8,12 +8,14 @@ import CustomButton from "../../components/CustomButton";
 import {formatDate} from '../../helpers/dateFormat'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateProfile, updateImage, getCurrentUser } from './profileApi'
-
+import { setSelectedItem } from '../../slices/menu';
 
 // Profile page
 const Profile = () => {
   const curUser = useSelector((state) => state.auth.currentUser);
   const dispatch = useDispatch();
+  dispatch(setSelectedItem(3))
+  console.log(curUser)
 
   useEffect(() => {
     getCurrentUser(curUser.id, dispatch);
