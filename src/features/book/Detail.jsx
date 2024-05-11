@@ -59,13 +59,13 @@ const Detail = () => {
 
         {/* Note */}
         <div className='w-fit h-fit border-2 border-lightGrey rounded-md px-4 py-2 space-y-3'>
-          <p className='text-lg font-medium'>{currentBook.borrowed < currentBook.quantity ? 
+          <p className='text-lg font-medium'>{currentBook.borrowed < currentBook.quantity-1 ? 
             <span className='text-available'>Available</span> : 
             <span className='text-unavailable'>Not available</span>}
           </p>
           <p>Amount: <span className='font-medium'>{currentBook.quantity}</span></p>
           <p>Available: <span className='font-medium'>{currentBook.quantity - currentBook.borrowed}</span></p>
-          <CustomButton label='Borrow' classes='self-center w-[12rem]' disabled={currentBook.borrowed >= currentBook.quantity} onClick={gotoBorrow}  />
+          <CustomButton label='Borrow' classes='self-center w-[12rem]' disabled={currentBook.borrowed >= currentBook.quantity-1} onClick={gotoBorrow}  />
         </div>
       </div>
     }
