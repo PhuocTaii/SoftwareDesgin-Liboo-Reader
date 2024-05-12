@@ -13,7 +13,10 @@ export const getAllMemberships = async () => {
 
 export const membershipPayment = async (membership, user) => {
     try{
-        const res = await instance.post(`/payment/submitOrder?amount=${membership.membershipFee}&orderInfo=${user.id}`);
+        const fee = membership.membershipFee;
+        const id = user.id;
+        const res = await instance.post(`/payment/submitOrder?amount=${fee}&orderInfo=${id}`);
+        console.log(res.data);
         return res.data;
     } catch(err){
         console.log(err.response);

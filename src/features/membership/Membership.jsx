@@ -31,10 +31,10 @@ const Membership = () => {
     })
   }, [])
 
-  const handleOrder = (membership) => {
+  const handleOrder = async (membership) => {
     console.log(membership)
-    membershipPayment(membership, curUser, dispatch).then((data) => {
-      window.location.href = data
+    await membershipPayment(membership, curUser, dispatch).then((data) => {
+      // window.location.href = data
     })
   };
   
