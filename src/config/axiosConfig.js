@@ -1,7 +1,5 @@
 import axios from 'axios'
 import {store} from '../store'
-import { jwtDecode } from 'jwt-decode' 
-import { useSelector } from 'react-redux';
 
 store.subscribe(listener)
 

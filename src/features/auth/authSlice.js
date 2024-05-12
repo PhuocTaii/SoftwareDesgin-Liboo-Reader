@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getCurrentUser } from '../profile/profileApi'
 
 const initialState = {
     currentUser: null,

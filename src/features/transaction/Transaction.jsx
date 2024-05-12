@@ -60,7 +60,7 @@ const Transaction = () => {
   }
 
   const addISBN = (isbn) => {
-    if(isbn !== '' && reservation.isbn.length < 2 && !reservation.isbn.includes(isbn))
+    if(isbn !== '' && !reservation.isbn.includes(isbn))
       setReservation({...reservation, isbn: [...reservation.isbn, isbn]});
   }
 

@@ -338,7 +338,7 @@ const History = () => {
                             getPriceForLost()
                           }}
                         >
-                          Report lost book
+                          Lost book
                         </Button>
                       </>
                       }
